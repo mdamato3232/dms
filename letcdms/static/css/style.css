@@ -5,7 +5,10 @@ img {
   width: 100%; }
 
 .logo {
-  width: 80px; }
+  width: 50px; }
+
+ .bplogo {
+  width: 60px; }
 
 .navbar {
   opacity: 0.9;
