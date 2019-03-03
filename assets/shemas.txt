@@ -1,0 +1,35 @@
+MODEL/DB FIELDS
+
+####  ASSET
+id: INT
+partnumber: STR
+serialnumber: STR
+description: TEXT
+sector: INT (FOREIGN KEY [sector])
+value: INT
+inservicedate: DATE
+status: INT (FOREIGN KEY [equipmentstatus])
+photo_main: STR
+photo_1: STR
+photo_2: STR
+photo_3: STR
+photo_4: STR
+photo_5: STR
+photo_6: STR
+manufacturer: STR
+
+
+
+#### OPERATOR
+id: INT
+name: STR
+description: TEXT
+email: STR
+phone: STR
+
+
+#### CONTACT
+id: INT
+user_id: INT
+rfi: INT
+rfi_id: INT
