@@ -8,11 +8,6 @@ from .tables import AssetTable
 def index(request):
   table = AssetTable(Asset.objects.all())
   RequestConfig(request).configure(table)
-
-  """ context = {
-    'assets': assets
-  } """
-
   return render(request, 'assets/assets.html', {'table': table})
 
 def asset(request):
