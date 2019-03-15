@@ -14,7 +14,7 @@ class CurrencyColumn(tables.Column):
 
 class AssetTable(tables.Table):
     id = tables.LinkColumn('asset', args=[A('pk')])
-    partnumber = tables.Column()
+    partnumber = tables.LinkColumn('asset', args=[A('pk')])
     serialnumber = tables.Column()
     component = tables.Column()
     sector = tables.Column()

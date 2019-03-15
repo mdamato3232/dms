@@ -23,8 +23,7 @@
   <div class="container">
     <div class="row text-center">
       <div class="col-md-12">
-        <form action="{% url 'assets' %}" method="POST">
-          {% csrf_token %}
+        <form action="{% url 'search' %}">
           <!-- Form Row 1 -->
           <div class="form-row">
             <div class="col-md-4 mb-3">
@@ -144,8 +143,5 @@
 {% if table %}
   {% render_table table %}
 {% endif %}
-
-<div class="col-md-6 mb-5"> The grand total is: ${{ grandtotal | intcomma }}
-</div>
 
 {% endblock %}
