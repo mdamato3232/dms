@@ -13,9 +13,20 @@ def index(request):
   else:
     # read the form, do the query and filtering, render table.
     print("it's a post" + request.method)
-    table = AssetTable(Asset.objects.all())
+    parts = Asset.objects.all()
+    table = AssetTable(parts)
+    print(table)
+    print(parts)
+
+    grandtotal = 0
+    for part in parts:
+      grandtotal += part.cost
+    print("Grand total = " + str(grandtotal))
+
     RequestConfig(request).configure(table)
-    return render(request, 'assets/assets.html', {'table': table})
+
+    context = {'grandtotal': grandtotal, 'table': table}
+    return render(request, 'assets/assets.html', context)
 
 def asset(request, asset_id):
   asset = get_object_or_404(Asset, pk=asset_id)
