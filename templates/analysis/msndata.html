@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table align="center">
+    <tr>
+        <td id="header" colspan="10"><h1>Missions Currently in Database</h1></td>
+    </tr>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Name</th>
+        <th>Collection Plan</th>
+        <th>Component</th>
+        <th>Sector</th>
+        <th>Sensor</th>
+        <th>Profile</th>
+        <th>Transmission</th>
+        <th>Upload Time</th>
+    </tr>
+    {% for mission in missions %}
+        <tr>
+            <td><a href="/letcdms/letcap/tacticalAnalysis/?miss_id={{ mission.id|urlencode }}">{{ mission.id }}</a></td>
+            <td>{{ mission.description }}</td>
+            <td>{{ mission.name }}</td>
+            <td>{{ mission.collection_plan }}</td>
+            <td>{{ mission.cbp_component }}</td>
+            <td>{{ mission.cbp_sector }}</td>
+            <td>{{ mission.sensor }}</td>
+            <td>{{ mission.profile_fn }}</td>
+            <td>{{ mission.tx_fn }}</td>
+            <td>{{ mission.uploaded_at }}</td>
+        </tr>
+    {% endfor %} 
+
+</table>
+    
+{% endblock %}

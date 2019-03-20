@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content%}
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+      <div class="container">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="{% url 'index' %}">
+                <i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="breadcrumb-item active"> Analysis</li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+    <!-- Alerts -->
+    {% include 'partials/_alerts.html' %}
+    <h1>Analysis</h1>
+{% endblock %}

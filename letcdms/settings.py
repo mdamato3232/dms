@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'assets.apps.AssetsConfig',
     'processing.apps.ProcessingConfig',
+    'analysis.apps.AnalysisConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.humanize',
     'django.contrib.admin',
