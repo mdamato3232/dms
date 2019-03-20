@@ -3,7 +3,8 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'index' %}">
+    <!-- <a class="navbar-brand" href="{% url 'index' %}"> -->
+    <a class="navbar-brand" href="/admin">
       <img src="{% static 'img/usbp.png' %}" class="logo" alt="">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
@@ -33,7 +34,7 @@
           <a class="nav-link" href="listings.html">Collection</a>
         </li>
         <li class="nav-item mr-1">
-          <a class="nav-link" href="listings.html">Processing</a>
+          <a class="nav-link" href="{% url 'ingest' %}">Processing</a>
         </li>
         <li class="nav-item mr-1">
           <a class="nav-link" href="listings.html">Analysis</a>

@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'assets.apps.AssetsConfig',
+    'processing.apps.ProcessingConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.humanize',
     'django.contrib.admin',

@@ -20,8 +20,6 @@ def asset(request, asset_id):
 def search(request):
   queryset_list = Asset.objects.order_by('partnumber')
 
-  print('About to test for keywords')
-  
   # Keywords
   if 'keywords' in request.GET:
     keywords = request.GET['keywords']

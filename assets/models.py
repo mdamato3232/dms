@@ -34,7 +34,7 @@ class Asset(models.Model):
   file_5 = models.FileField(upload_to='files/%y/%m/%d',blank=True)
   file_6 = models.FileField(upload_to='files/%y/%m/%d',blank=True)
   website = models.URLField(blank=True)
-  in_service = models.BooleanField(default=False)
+  is_available = models.BooleanField(default=False)
   def __str__(self):
     return self.partnumber
 

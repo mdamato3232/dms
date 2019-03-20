@@ -28,6 +28,9 @@
         <li class="breadcrumb-item">
           <a href="{% url 'assets' %}">Assets</a>
         </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'search' %}">Search</a>
+        </li>
         <li class="breadcrumb-item active">{{asset.partnumber}}</li>
       </ol>
     </nav>
@@ -91,44 +94,33 @@
         <div class="row mb-5 fields">
           <div class="col-md-6">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-money-bill-alt"></i> Asking Price:
-                <span class="float-right">$490,000</span>
+              <li class="list-group-item text-secondary">Procurement Cost:
+                <span class="float-right">${{ asset.cost | intcomma }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-bed"></i> Bedrooms:
-                <span class="float-right">3</span>
+              <li class="list-group-item text-secondary">Acquire Date:
+                <span class="float-right">{{ asset.acquire_date }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-bath"></i> Bathrooms:
-                <span class="float-right">2</span>
+              <li class="list-group-item text-secondary">Component:
+                <span class="float-right">{{ asset.component }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-car"></i> Garage:
-                <span class="float-right">2
-                </span>
+              <li class="list-group-item text-secondary">Sector:
+                <span class="float-right">{{ asset.sector }}</span>
               </li>
             </ul>
           </div>
           <div class="col-md-6">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-th-large"></i> Square Feet:
-                <span class="float-right">3200</span>
+              <li class="list-group-item text-secondary">Part Number:
+                <span class="float-right">{{ asset.partnumber }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-square"></i> Lot Size:
-                <span class="float-right">2.5 Acres
-                </span>
+              <li class="list-group-item text-secondary">Serial Number:
+                <span class="float-right">{{ asset.serialnumber }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-calendar"></i> Listing Date:
-                <span class="float-right">8/30/2018</span>
+              <li class="list-group-item text-secondary">Website:
+                <span class="float-right">{{ asset.website }}</span>
               </li>
-              <li class="list-group-item text-secondary">
-                <i class="fas fa-bed"></i> Realtor:
-                <span class="float-right">Kyle Brown
-                </span>
+              <li class="list-group-item text-secondary">Is Available:
+                <span class="float-right">{{ asset.is_available }}</span>
               </li>
 
 
@@ -166,7 +158,7 @@
         <!-- Description -->
         <div class="row mb-5">
           <div class="col-md-12">
-            {{ asset.description }}
+            Description: {{ asset.description }}
           </div>
         </div>
       </div>
