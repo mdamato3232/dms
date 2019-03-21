@@ -11,5 +11,5 @@ class AssetAdmin(admin.ModelAdmin):
   list_per_page = 25
 
 admin.site.register(Asset, AssetAdmin)
-admin.site.register(Component)
-admin.site.register(Sector)
+# admin.site.register(Component)
+# admin.site.register(Sector)
