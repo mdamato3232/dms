@@ -38,8 +38,25 @@ def search(request):
     if serialnumber:
       queryset_list = queryset_list.filter(serialnumber__icontains=serialnumber)
 
+# Component. Since this is a foreign key, foreignkey__linked table__iexact.
+  if 'component' in request.GET:
+    component = request.GET['component']
+    if component:
+      queryset_list = queryset_list.filter(component__component__iexact=component)
 
+# Sector. Since this is a foreign key, foreignkey__linked table__iexact.
+  if 'sector' in request.GET:
+    sector = request.GET['sector']
+    if sector:
+      queryset_list = queryset_list.filter(sector__sector__iexact=sector)
 
+# Max Cost.
+  if 'cost' in request.GET:
+    cost = request.GET['cost']
+    if cost:
+      queryset_list = queryset_list.filter(cost__lt=cost)
+
+  # Build the table for rendering
   table = AssetTable(queryset_list)
 
   grandtotal = 0
