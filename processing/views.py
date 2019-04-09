@@ -81,7 +81,7 @@ def upload(request):
             if newform.tx_fn:
                 #print(settings.MEDIA_ROOT+'/'+str(newform.transmission_export_csv))
                 ingest(settings.MEDIA_ROOT+'/'+str(newform.tx_fn),newform.pk)
-                messages.success(request, 'Mission Data Successfully Ingested')
+                messages.success(request, 'Mission ' + str(newform.pk) + ' Data Successfully Ingested')
             return HttpResponseRedirect('/processing/')
     else:
         form = UploadFileForm()
@@ -94,15 +94,15 @@ def ingest(filename,primarykey):
     # read the first line, profile?, transmission?, or neither
     with open(filename, 'r') as input_file:
         firstLine = input_file.readline()
-        if 'Profile' in firstLine:
-            profile = exportloader(input_file, profileHeaders, drtProfileHeaders, filename, primarykey)
-            print ('Profile file name in /tmp = %s' % profile)
-            #pdb.set_trace()
-            with open(profile,'r') as f:
-                next(f) # read past the line with the column names.
-                cur.copy_from(f, 'letcpe_profiles', null="", sep=',', columns = (profileHeaders))
-            conn.commit()
-        elif 'Transmission' in firstLine:
+        # if 'Profile' in firstLine:
+        #     profile = exportloader(input_file, profileHeaders, drtProfileHeaders, filename, primarykey)
+        #     print ('Profile file name in /tmp = %s' % profile)
+        #     #pdb.set_trace()
+        #     with open(profile,'r') as f:
+        #         next(f) # read past the line with the column names.
+        #         cur.copy_from(f, 'letcpe_profiles', null="", sep=',', columns = (profileHeaders))
+        #     conn.commit()
+        if 'Transmission' in firstLine:
             transmission = exportloader(input_file, transHeaders, drtTransHeaders, filename, primarykey)
             print ('Transmission file name in /tmp = %s' % transmission)
             with open(transmission,'r') as f:
