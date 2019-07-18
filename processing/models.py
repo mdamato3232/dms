@@ -75,7 +75,7 @@ class Transmissions(models.Model):
     transmission_key = models.CharField(max_length=50,null=True)
     transmission_key_id = models.CharField(max_length=25, null=True)
     transmission_key_confidence = models.CharField(max_length=10, null=True)
-    content_type = models.CharField(max_length=10,null=True)
+    content_type = models.CharField(max_length=20,null=True)
     radio_id = models.CharField(max_length=10,null=True)
     coder_id = models.CharField(max_length=10,null=True)
     contact_id = models.CharField(max_length=10,null=True)

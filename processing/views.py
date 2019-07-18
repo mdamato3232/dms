@@ -137,6 +137,7 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
                 i += 1
             else:
                 print(10*'-' + '>' +"No match: %s" % element) #shld nvr hapn.
+                i += 1
         # Now, copy data from source file to destination file row by row.
         rowCount = 0
         for newLine in filename:
