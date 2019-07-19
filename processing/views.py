@@ -109,8 +109,10 @@ def ingest(filename,primarykey):
                 next(f) # read past the line with the column names.
                 cur.copy_from(f, 'processing_transmissions', null="", sep=',', columns = (transHeaders))
             conn.commit()
+            f.close()
         else:
             print('Unknown file format')
+        input_file.close()
         return
 
 # exportloader creates the temporary (/tmp) csv file needed for import to db.
@@ -127,17 +129,16 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
         fields = []
         # secondLine in DRT export file has all the field names,read into list.
         secondLine = filename.readline().rstrip('\n').split(',')
-        i = 0 # counter for source index
+        i = 0 # counter for source file column
         for element in secondLine: # loop over elements and look for them 
             index = find_element_in_list(element,drtHeaders)
             if index != None:
                 print("matches index=%s, element = %s" % (index, element))
                 tupleIndex = (index, i) # tuple (destinationIndex, SourceIndex)
                 fields.append(tupleIndex) # save one tuple per found element.
-                i += 1
             else:
-                print(10*'-' + '>' +"No match: %s" % element) #shld nvr hapn.
-                i += 1
+                print(10*'-' + '>' +"No match: %s" % element) #Ignore Elements.
+            i += 1 # Increment source file column index
         # Now, copy data from source file to destination file row by row.
         rowCount = 0
         for newLine in filename:
@@ -155,6 +156,7 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
             # turn newRow list into a string and write to dest .csv file.
             csvfile.write(','.join(newRow) + '\n')
             rowCount += 1
+    csvfile.close()
     return newName # return the name of the temporary file.
 
 # Quick utility to return index of found element in a list.
