@@ -54,10 +54,16 @@ def radiopie(request, mission_id):
     radios = [d['radio_type'] for d in l]
     radList = list(Counter(radios).keys())
     radQty = list(Counter(radios).values())
-    # extra_serie = {"tooltip": {"y_start": "", "y_end": ""}}
-    extra_serie = {"tooltip": {"y_start": "", "y_end": ""}}
-    # extra_serie = {"tooltip": {"y_start": "Mike", "y_end": ""}}
-    chartdata = {'x': radList, 'y1': radQty, 'extra1': extra_serie}
+
+    extra_serie = {
+      "tooltip": {"y_start": "", "y_end": " transmissions"},
+      }
+
+    chartdata = {
+      'x': radList,
+      'y1': radQty,
+      'extra1': extra_serie}
+
     charttype = "pieChart"
 
     data = {
@@ -65,7 +71,6 @@ def radiopie(request, mission_id):
         'chartdata': chartdata,
     }
     #pdb.set_trace()
-    #return render(request, 'letcap/piechart.html', data)
     return render_to_response('analysis/piechart.html', data)
 
   
