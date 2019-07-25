@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 import psycopg2
 import re
 from django.contrib import messages
+import pdb
 
 drtTransHeaders = ['ProfileId', 'ProfileFrequency', 'RadioModel', 'Baud',
                     'Bandwidth', 'Encryption', 'PrivacyModel', 'PrivacyId',
@@ -143,18 +144,31 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
         rowCount = 0
         for newLine in filename:
             newLine = newLine.rstrip('\n').split(',') # turn string into list.
+            try:
+                newLine = [s.strip('"') for s in newLine] # remove double quotes
+            except TypeError:
+                print('There is a non string in the list row = %s' % rowCount)
+            except:
+                print('Something happened removing quotes row=%s' % rowCount)
             # Rebuild the row of data for the new .csv file
             newRow = []
             for i in range(len(headers)-1): # create a blank list -1 for pk.
                 newRow.append('')
-            #pdb.set_trace()
             for i in fields: # fields is a list of tuples (dest, source)
                 newRow[i[0]] = newLine[i[1]] # copy i[0]-dest, i[1]-source
+                # pdb.set_trace()
             # add the primary key to the last element in the list.
             newRow.append(str(primaryKey))
             #pdb.set_trace()
             # turn newRow list into a string and write to dest .csv file.
-            csvfile.write(','.join(newRow) + '\n')
+            # if rowCount == 1000:
+            #     pdb.set_trace()
+            try:
+                csvfile.write(','.join(newRow) + '\n')
+            except TypeError:
+                print('TypeError writing newRow rowCount= %s' % rowCount)
+            except:
+                print('Error writing newRow rowCount = %s' % rowCount)
             rowCount += 1
     csvfile.close()
     return newName # return the name of the temporary file.
