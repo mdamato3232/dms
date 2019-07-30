@@ -81,8 +81,13 @@ def upload(request):
             # ingest profile data into database
             if newform.tx_fn:
                 #print(settings.MEDIA_ROOT+'/'+str(newform.transmission_export_csv))
-                ingest(settings.MEDIA_ROOT+'/'+str(newform.tx_fn),newform.pk)
-                messages.success(request, 'Mission ' + str(newform.pk) + ' Data Successfully Ingested')
+                rc = ingest(settings.MEDIA_ROOT+'/'+str(newform.tx_fn),newform.pk)
+                if rc == None:
+                    messages.success(request, 'Mission ' + str(newform.pk) + ' Data Successfully Ingested')
+                else:
+                    messages.error(request, 'Mission ' + str(newform.pk) +
+                        ' Error during Ingest code = %s' % rc)
+
             return HttpResponseRedirect('/processing/')
     else:
         form = UploadFileForm()
@@ -108,13 +113,21 @@ def ingest(filename,primarykey):
             print ('Transmission file name in /tmp = %s' % transmission)
             with open(transmission,'r') as f:
                 next(f) # read past the line with the column names.
-                cur.copy_from(f, 'processing_transmissions', null="", sep=',', columns = (transHeaders))
-            conn.commit()
+                rc = None
+                try:
+                    cur.copy_from(f, 'processing_transmissions', null="", sep=',', columns = (transHeaders))
+                # except:
+                #     print('DataError writing file %s to database' % transmission)
+                except:
+                    print('Unknown error writing file %s to database' % transmission)
+                    rc = 1 #error code 1 DB error
+            if rc == None:
+                conn.commit()
             f.close()
         else:
             print('Unknown file format')
         input_file.close()
-        return
+        return rc
 
 # exportloader creates the temporary (/tmp) csv file needed for import to db.
 def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
@@ -148,6 +161,7 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
                 newLine = [s.strip('"') for s in newLine] # remove double quotes
             except TypeError:
                 print('There is a non string in the list row = %s' % rowCount)
+
             except:
                 print('Something happened removing quotes row=%s' % rowCount)
             # Rebuild the row of data for the new .csv file
