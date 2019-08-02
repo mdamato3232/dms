@@ -22,16 +22,22 @@
           <a class="nav-link" href="{% url 'index' %}">Home</a>
         </li>
         <li 
-          {% if 'about' in request.path %}
+          {% if 'planning' in request.path %}
             class="nav-item active mr-1"
           {% else% }
             class="nav-item mr-1"
           {% endif %}
         >
-          <a class="nav-link" href="{% url 'about' %}">Planning</a>
+          <a class="nav-link" href="{% url 'planning' %}">Planning</a>
         </li>
-        <li class="nav-item mr-1">
-          <a class="nav-link" href="listings.html">Collection</a>
+        <li
+          {% if 'collection' in request.path %}
+            class="nav-item active mr-1"
+          {% else% }
+            class="nav-item mr-1"
+          {% endif %}
+        >
+          <a class="nav-link" href="{% url 'collection' %}">Collection</a>
         </li>
         <li 
           {% if 'processing' in request.path %}
@@ -51,8 +57,14 @@
         >
           <a class="nav-link" href="{% url 'viewmissions' %}">Analysis</a>
         </li>
-        <li class="nav-item mr-1">
-          <a class="nav-link" href="listings.html">Dissemination</a>
+        <li
+          {% if 'dissemination' in request.path %}
+            class="nav-item active mr-1"
+          {% else% }
+            class="nav-item mr-1"
+          {% endif %}
+        >
+          <a class="nav-link" href="{% url 'dissemination' %}">Dissemination</a>
         </li>
         <li 
           {% if 'assets' in request.path %}

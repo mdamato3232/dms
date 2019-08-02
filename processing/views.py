@@ -72,13 +72,12 @@ def upload(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            newform = form.save()
-            print("the primary key of the last save is %s" % newform.pk)
-            # ingest profile data into database
-            if newform.profile_fn:
-                #print(settings.MEDIA_ROOT+'/'+str(newform.profile_export_csv))
-                ingest(settings.MEDIA_ROOT+'/'+str(newform.profile_fn),newform.pk)
-            # ingest profile data into database
+            newform = form.save(commit=False)
+            newform.username = request.user.username # Insert login name
+            newform.save() # write record to database
+            # print('Username from newform is = %s' % newform.username)
+            # print("the primary key of the last save is %s" % newform.pk)
+            # ingest transmission data into database
             if newform.tx_fn:
                 #print(settings.MEDIA_ROOT+'/'+str(newform.transmission_export_csv))
                 rc = ingest(settings.MEDIA_ROOT+'/'+str(newform.tx_fn),newform.pk)
@@ -87,7 +86,6 @@ def upload(request):
                 else:
                     messages.error(request, 'Mission ' + str(newform.pk) +
                         ' Error during Ingest code = %s' % rc)
-
             return HttpResponseRedirect('/processing/')
     else:
         form = UploadFileForm()

@@ -17,7 +17,7 @@ class MissionDataTable(tables.Table):
     id = tables.LinkColumn('viewtransmissiondata', args=[A('pk')])
     # description = tables.Column()
     description = tables.LinkColumn('radiopie', args=[A('pk')])
-    name = tables.Column()
+    username = tables.Column()
     collection_plan = tables.Column()
     cbp_component = tables.Column()
     cbp_sector = tables.Column()

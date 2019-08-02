@@ -8,8 +8,14 @@ def index(request):
   else:
     return redirect('login')
 
-def about(request):
-  return render(request, 'pages/about.html')
+def planning(request):
+  return render(request, 'pages/planning.html')
+
+def collection(request):
+  return render(request, 'pages/collection.html')
+
+def dissemination(request):
+  return render(request, 'pages/dissemination.html')
 
 
 

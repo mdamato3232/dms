@@ -7,12 +7,11 @@ from assets.models import Component, Sector
 # Table holds description of the mission
 class MissionData(models.Model):
     description = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
+    username = models.CharField(max_length=150, null=True)
     collection_plan = models.CharField(max_length=100)
     cbp_component = models.ForeignKey('assets.Component',on_delete=models.PROTECT)
     cbp_sector = models.ForeignKey('assets.Sector',on_delete=models.PROTECT)
     sensor = models.CharField(max_length=100)
-    profile_fn = models.FileField(upload_to='exports/')
     tx_fn = models.FileField(upload_to='exports/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
