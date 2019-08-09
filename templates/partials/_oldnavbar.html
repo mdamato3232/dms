@@ -7,10 +7,10 @@
     <a class="navbar-brand" href="/admin">
       <img src="{% static 'img/usbp.png' %}" class="logo" alt="">
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <ul class="navbar-nav">
         <li 
           {% if '/' == request.path %}
@@ -50,19 +50,12 @@
         </li>
         <li 
           {% if 'analysis' in request.path %}
-            class="nav-item dropdown active mr-1"
+            class="nav-item active mr-1"
           {% else% }
-            class="nav-item dropdown mr-1"
+            class="nav-item mr-1"
           {% endif %}
         >
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Analysis
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'viewmissions' %}">By Mission</a>
-            <a class="dropdown-item" href="#">Query</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
+          <a class="nav-link" href="{% url 'viewmissions' %}">Analysis</a>
         </li>
         <li
           {% if 'dissemination' in request.path %}

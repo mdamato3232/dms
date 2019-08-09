@@ -32,9 +32,9 @@
   </div>
 </section>
 
-<section id="processform" class="mt-3">
-  <div class="container">
-    <h3>Enter Mission Data For Upload</h3>
+<section class="mt-1">
+  <div id="processform" class="container">
+    <h3 id="proctitle">Enter Mission Data For Upload</h3>
     <!-- Alerts -->
     {% include 'partials/_alerts.html' %}
     {% if form.errors %}
@@ -42,7 +42,7 @@
     {% endif %}
     <form action="" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
-        <table>
+        <table class="proc-table">
             {{ form.as_table }}
         </table>
         <input type="submit" value="Submit">

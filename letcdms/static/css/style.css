@@ -105,7 +105,7 @@ img {
 
 table, th, td{
   border: 1px solid black;
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
 }
 
 th{
@@ -121,13 +121,21 @@ tr:nth-child(odd){
   background-color: white;
 }
 
-tr{
+/* tr{
   line-height: 5px;
-}
+} */
 
 .topics tr { line-height: 14px; }
 
-tr {
+/* tr {
   height:20px
+} */
+
+#proctitle {
+  color:#000;
+}
+
+.dropdown-menu {
+  position: absolute;
 }
 
