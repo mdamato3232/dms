@@ -48,19 +48,13 @@
         >
           <a class="nav-link" href="{% url 'upload' %}">Processing</a>
         </li>
-        <li 
-          {% if 'analysis' in request.path %}
-            class="nav-item dropdown active mr-1"
-          {% else% }
-            class="nav-item dropdown mr-1"
-          {% endif %}
-        >
+        <li class="nav-item mr-1 dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Analysis
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="{% url 'viewmissions' %}">By Mission</a>
-            <a class="dropdown-item" href="#">Query</a>
+            <a class="dropdown-item" href="{% url 'dbsearch' %}">Query</a>
             <a class="dropdown-item" href="#">Something else here</a>
           </div>
         </li>

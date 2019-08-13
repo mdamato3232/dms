@@ -7,5 +7,5 @@ urlpatterns = [
   # path('<int:mission_id>', views.viewtransmissiondata, name='viewtransmissiondata'),
   path('<int:mission_id>', views.radiopie, name='radiopie'),
   path('<int:mission_id>', views.viewtransmissiondata, name='viewtransmissiondata'),
-  # path('search', views.search, name='search'),
+  path('dbsearch', views.dbsearch, name='dbsearch'),
 ]

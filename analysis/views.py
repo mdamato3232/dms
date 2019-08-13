@@ -7,6 +7,18 @@ from collections import Counter
 def index(request):
   return render(request, 'analysis/analysis.html')
 
+def dbsearch(request):
+  queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
+  print('Number of records returned = %s' % len(queryset_list))
+  table = TransmissionsTable(queryset_list)
+
+  RequestConfig(request).configure(table)
+
+  context = {
+    'table': table
+  }
+  return render(request, 'analysis/transmissions.html', context)
+
 def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
