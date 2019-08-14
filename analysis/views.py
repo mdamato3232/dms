@@ -3,21 +3,62 @@ from processing.models import MissionData, Transmissions
 from django_tables2 import RequestConfig
 from .tables import MissionDataTable, TransmissionsTable
 from collections import Counter
+from .forms import QueryForm
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 def index(request):
   return render(request, 'analysis/analysis.html')
 
-def dbsearch(request):
-  queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
-  print('Number of records returned = %s' % len(queryset_list))
-  table = TransmissionsTable(queryset_list)
+def dbquery(request):
+  # if this is a POST request we need to process the form data
+  if request.method == 'POST':
+    # create a form instance and populate it with data from the request:
+    form = QueryForm(request.POST)
+    # check whether it's valid:
+    if form.is_valid():
+        # process the data in form.cleaned_data as required
+        StartFreq = form.cleaned_data['start_freq']
+        print('Start Freq = %s' % StartFreq)
+        StartFreq = int(StartFreq * 1000000)
+        print('Start Freq mutliplied = %s' % StartFreq)
 
-  RequestConfig(request).configure(table)
+        # queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
+        queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
+        print('Number of records returned = %s' % len(queryset_list))
+        table = TransmissionsTable(queryset_list)
 
-  context = {
-    'table': table
-  }
-  return render(request, 'analysis/transmissions.html', context)
+        RequestConfig(request).configure(table)
+
+        context = {
+          'table': table
+        }
+        return render(request, 'analysis/transmissions.html', context)
+
+        # # redirect to a new URL:
+        # return HttpResponseRedirect('/analysis/')
+
+  # if a GET (or any other method) we'll create a blank form
+  else:
+      form = QueryForm()
+
+  return render(request, 'analysis/dbquery.html', {'form': form})
+
+
+
+
+
+  # # queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
+  # queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
+  # print('Number of records returned = %s' % len(queryset_list))
+  # table = TransmissionsTable(queryset_list)
+
+  # RequestConfig(request).configure(table)
+
+  # context = {
+  #   'table': table
+  # }
+  # return render(request, 'analysis/transmissions.html', context)
 
 def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
@@ -87,3 +128,14 @@ def radiopie(request, mission_id):
 
   
 
+# queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
+  # queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
+  # print('Number of records returned = %s' % len(queryset_list))
+  # table = TransmissionsTable(queryset_list)
+
+  # RequestConfig(request).configure(table)
+
+  # context = {
+  #   'table': table
+  # }
+  # return render(request, 'analysis/transmissions.html', context)

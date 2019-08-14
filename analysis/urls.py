@@ -4,8 +4,7 @@ from . import views
 
 urlpatterns = [
   path('', views.viewmissions, name='viewmissions'),
-  # path('<int:mission_id>', views.viewtransmissiondata, name='viewtransmissiondata'),
-  path('<int:mission_id>', views.radiopie, name='radiopie'),
   path('<int:mission_id>', views.viewtransmissiondata, name='viewtransmissiondata'),
-  path('dbsearch', views.dbsearch, name='dbsearch'),
+  path('<int:mission_id>', views.radiopie, name='radiopie'),
+  path('dbquery', views.dbquery, name='dbquery'),
 ]

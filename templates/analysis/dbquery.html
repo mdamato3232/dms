@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+
+<section id="dbquery" class="bg-light py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 mx-auto">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h4>
+              <i class="fas fa-database"></i> Database Query
+            </h4>
+          </div>
+          <div class="card-body">
+            <!-- Alerts -->
+            {% include 'partials/_alerts.html' %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="container">
+                  <div class="row">
+                    <div class=col-sm>
+                      <div class="fieldWrapper col-6" id="dbWrapper" >
+                        {{ form.start_freq.errors }}
+                        <label for="{{ form.start_freq.id_for_label }}"> Start Freq:</label>
+                        {{ form.start_freq }}
+                        {{ form.start_time.errors }}
+                        <label for="{{ form.start_time.id_for_label }}"> Start Time:</label>
+                        {{ form.start_time }}
+                        {{ form.radio_type.errors }}
+                        <label for="{{ form.radio_type.id_for_label }}"> Radio Type:</label>
+                        {{ form.radio_type }}
+                        {{ form.encryption_type.errors }}
+                        <label for="{{ form.encryption_type.id_for_label }}"> Encryption Type:</label>
+                        {{ form.encryption_type }}
+                        {{ form.privacy_method.errors }}
+                        <label for="{{ form.privacy_method.id_for_label }}"> Privacy Method:</label>
+                        {{ form.privacy_method }}
+                        {{ form.privacy_id.errors }}
+                        <label for="{{ form.privacy_id.id_for_label }}"> Privacy ID:</label>
+                        {{ form.privacy_id }}
+                        {{ form.key.errors }}
+                        <label for="{{ form.key.id_for_label }}"> Key:</label>
+                        {{ form.key }}
+                        {{ form.base_mobile.errors }}
+                        <label for="{{ form.base_mobile.id_for_label }}"> Base/Mobile:</label>
+                        {{ form.base_mobile }}
+                        {{ form.contact_id.errors }}
+                        <label for="{{ form.contact_id.id_for_label }}"> Contact ID:</label>
+                        {{ form.contact_id }}
+                      </div>
+                    </div>
+                    <div class=col-sm>
+                      <div class="fieldWrapper col-6">
+                        {{ form.end_freq.errors }}
+                        <label for="{{ form.end_freq.id_for_label }}"> End Freq:</label>
+                        {{ form.end_freq }}
+                        {{ form.end_time.errors }}
+                        <label for="{{ form.end_time.id_for_label }}"> End Time:</label>
+                        {{ form.end_time }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <input type="submit" value="Submit" class="btn btn-secondary btn-block mt-2">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</section>
+
+{% endblock %}

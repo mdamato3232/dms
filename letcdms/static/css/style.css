@@ -139,3 +139,7 @@ tr:nth-child(odd){
   position: absolute;
 }
 
+label { margin-bottom: 0px;
+}
+
+
