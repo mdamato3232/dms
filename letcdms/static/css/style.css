@@ -139,7 +139,9 @@ tr:nth-child(odd){
   position: absolute;
 }
 
-label { margin-bottom: 0px;
+.fieldWrapper label { 
+  margin-bottom: 0px;
+  width: 200px;
 }
 
 

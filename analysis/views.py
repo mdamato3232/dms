@@ -5,6 +5,9 @@ from .tables import MissionDataTable, TransmissionsTable
 from collections import Counter
 from .forms import QueryForm
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
+from analysis.choices import radio_type_choices, encryption_type_choices, privacy_method_choices, base_mobile_choices, rssi_min_choices
+import time
 
 
 def index(request):
@@ -18,13 +21,56 @@ def dbquery(request):
     # check whether it's valid:
     if form.is_valid():
         # process the data in form.cleaned_data as required
-        StartFreq = form.cleaned_data['start_freq']
-        print('Start Freq = %s' % StartFreq)
-        StartFreq = int(StartFreq * 1000000)
-        print('Start Freq mutliplied = %s' % StartFreq)
+        queryset_list = Transmissions.objects.order_by('-mission')
 
-        # queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
-        queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
+        # Frequency range
+        start_freq = form.cleaned_data['start_freq']
+        if start_freq:
+          start_freq = int(start_freq * 1000000)
+          end_freq = form.cleaned_data['end_freq']
+          if end_freq:
+            end_freq = int(end_freq * 1000000)
+            print('end_freq multiplied = %s' % end_freq)
+          else:
+            end_freq = start_freq
+          queryset_list = queryset_list.filter(profile_frequency__gte=start_freq).filter(profile_frequency__lte=end_freq)
+
+        # Time range
+        start_time = form.cleaned_data['start_time']
+        if start_time:
+          end_time = form.cleaned_data['end_time']
+          if not end_time:
+            end_time = start_time
+          queryset_list = queryset_list.filter(timestamp_local__gte=start_time).filter(timestamp_local__lte=end_time)
+        
+        # Mission number
+        mission = form.cleaned_data['mission']
+        print('Mission Number = %s' % mission)
+        if mission:
+          queryset_list = queryset_list.filter(mission_id=mission)
+
+        # Privacy ID
+        privacy_id = form.cleaned_data['privacy_id']
+        print('privacy_id Number = %s' % privacy_id)
+        if privacy_id:
+          queryset_list = queryset_list.filter(privacy_id=privacy_id)
+
+        # key
+        key = form.cleaned_data['key']
+        print('key Number = %s' % key)
+        if key:
+          queryset_list = queryset_list.filter(key=key)
+
+        # Contact ID
+        contact_id = form.cleaned_data['contact_id']
+        print('contact_id Number = %s' % contact_id)
+        if contact_id:
+          queryset_list = queryset_list.filter(contact_id=contact_id)
+
+        # Alerts
+        if not queryset_list:
+          messages.error(request, 'No records match search parameters')
+          return HttpResponseRedirect('#')
         print('Number of records returned = %s' % len(queryset_list))
         table = TransmissionsTable(queryset_list)
 
@@ -34,6 +80,9 @@ def dbquery(request):
           'table': table
         }
         return render(request, 'analysis/transmissions.html', context)
+    else: 
+      messages.error(request, 'Empty Form')
+      return HttpResponseRedirect('#')
 
         # # redirect to a new URL:
         # return HttpResponseRedirect('/analysis/')
@@ -41,8 +90,10 @@ def dbquery(request):
   # if a GET (or any other method) we'll create a blank form
   else:
       form = QueryForm()
-
-  return render(request, 'analysis/dbquery.html', {'form': form})
+      context = {
+        'form': form,
+      }
+  return render(request, 'analysis/dbquery.html', context)
 
 
 
