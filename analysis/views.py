@@ -13,6 +13,7 @@ import time
 def index(request):
   return render(request, 'analysis/analysis.html')
 
+# Database Query
 def dbquery(request):
   # if this is a POST request we need to process the form data
   if request.method == 'POST':
@@ -55,7 +56,7 @@ def dbquery(request):
         if privacy_id:
           queryset_list = queryset_list.filter(privacy_id=privacy_id)
 
-        # key
+        # Key
         key = form.cleaned_data['key']
         print('key Number = %s' % key)
         if key:
@@ -66,6 +67,37 @@ def dbquery(request):
         print('contact_id Number = %s' % contact_id)
         if contact_id:
           queryset_list = queryset_list.filter(contact_id=contact_id)
+
+        # Dropdowns will not be None when empty. Treat differently.
+        # Radio Type
+        radio_type = form.cleaned_data['radio_type']
+        if radio_type != '':
+          print('radio_type = %s' % radio_type)
+          queryset_list = queryset_list.filter(radio_type=radio_type)
+
+        # Encryption Type
+        encryption_type = form.cleaned_data['encryption_type']
+        if encryption_type != '':
+          print('encryption_type = %s' % encryption_type)
+          queryset_list = queryset_list.filter(encryption_type=encryption_type)
+
+        # Privacy Method
+        privacy_method = form.cleaned_data['privacy_method']
+        if privacy_method != '':
+          print('privacy_method = %s' % privacy_method)
+          queryset_list = queryset_list.filter(privacy_method=privacy_method)
+
+        # Base/Mobile
+        base_mobile = form.cleaned_data['base_mobile']
+        if base_mobile != '':
+          print('base_mobile = %s' % base_mobile)
+          queryset_list = queryset_list.filter(base_mobile=base_mobile)
+
+        # Minimum RSSI filter
+        rssi_min = form.cleaned_data['rssi_min']
+        if rssi_min != ('' or None):
+          print('rssi_min = %s' % rssi_min)
+          queryset_list = queryset_list.filter(rssi__gte=rssi_min)
 
         # Alerts
         if not queryset_list:
