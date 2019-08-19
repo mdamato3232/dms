@@ -7,7 +7,8 @@ from .forms import QueryForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from analysis.choices import radio_type_choices, encryption_type_choices, privacy_method_choices, base_mobile_choices, rssi_min_choices
-import time
+from django.db.models import Max, Min
+import time, pdb
 
 
 def index(request):
@@ -22,7 +23,7 @@ def dbquery(request):
     # check whether it's valid:
     if form.is_valid():
         # process the data in form.cleaned_data as required
-        queryset_list = Transmissions.objects.order_by('-mission')
+        queryset_list = Transmissions.objects.order_by('timestamp_gmt')
 
         # Frequency range
         start_freq = form.cleaned_data['start_freq']
@@ -99,11 +100,24 @@ def dbquery(request):
           print('rssi_min = %s' % rssi_min)
           queryset_list = queryset_list.filter(rssi__gte=rssi_min)
 
+        # maxtime = queryset_list.timestamp_gmt__max
+        # maxtime = queryset_list.aggregate(Max('timestamp_gmt'))
+        # print('max timestamp = %s' % maxtime)
+        # mintime = queryset_list.aggregate(Min('timestamp_gmt'))
+        # print('min timestamp = %s' % mintime)
+        # delta = maxtime - mintime
+        # print('delta time = %s' % delta)
+
         # Alerts
         if not queryset_list:
           messages.error(request, 'No records match search parameters')
           return HttpResponseRedirect('#')
         print('Number of records returned = %s' % len(queryset_list))
+        # pdb.set_trace()
+        # for record in queryset_list:
+        #   print('pk = %s' % record.pk)
+        #   print('Frequency = %s' % record.profile_frequency)
+
         table = TransmissionsTable(queryset_list)
 
         RequestConfig(request).configure(table)
@@ -125,7 +139,7 @@ def dbquery(request):
       context = {
         'form': form,
       }
-  return render(request, 'analysis/dbquery.html', context)
+  return render(request, 'analysis/dbqueryform.html', context)
 
 
 
@@ -147,7 +161,7 @@ def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
 
-  RequestConfig(request).configure(table)
+  RequestConfig(request).configure(tableForm)
 
   context = {
     'table': table
@@ -158,7 +172,7 @@ def viewtransmissiondata(request, mission_id):
   queryset_list = Transmissions.objects.filter(mission=mission_id)
   table = TransmissionsTable(queryset_list)
 
-  RequestConfig(request).configure(table)
+  RequestConfig(missionrequest).configure(table)
 
   context = {
     'table': table

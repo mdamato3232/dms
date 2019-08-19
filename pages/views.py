@@ -8,6 +8,7 @@ def index(request):
   else:
     return redirect('login')
 
+# put these here until actual apps are developed for these functions.
 def planning(request):
   return render(request, 'pages/planning.html')
 
