@@ -8,15 +8,13 @@
   <div class="container">
       <div class="row">
           <div class="col-md-6">
-            <div id="container" data-url="{% url 'radiopie2' %}"></div>
+            <div id="container"></div>
             <script src="{% static 'js/highcharts.src.js' %}"></script>
             <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
             <script>
               $.ajax({
-                url: $("#container").attr("data-url"),
-                dataType: 'json',
-                success: function (data) {
-                  Highcharts.chart("container", data);
+                success: function ("{{ json_chart }}"") {
+                  Highcharts.chart("container", "{{ json_chart }}");
                 }
               });
             </script>

@@ -17,7 +17,7 @@ class MissionDataTable(tables.Table):
     id = tables.LinkColumn('viewtransmissiondata', args=[A('pk')])
     # description = tables.Column()
     description = tables.LinkColumn('json_example', args=[A('pk')])
-    usname = tables.Column()
+    username = tables.Column()
     collection_plan = tables.Column()
     cbp_component = tables.Column()
     cbp_sector = tables.Column()
@@ -31,6 +31,7 @@ class MissionDataTable(tables.Table):
         # # exclude = ('description','photo_1','photo_2','photo_3','photo_4','photo_5','photo_6',
         # #     'file_1','file_2','file_3','file_4','file_5','file_6', 'website') # fields to exclude
         template_name = 'django_tables2/bootstrap4.html'
+        attrs = {'class': 'transtable'}   
 
 class TransmissionsTable(tables.Table):
     id = tables.Column()
@@ -46,11 +47,11 @@ class TransmissionsTable(tables.Table):
     key = tables.Column()
     key_id = tables.Column()
     key_confidence = tables.Column()
-    base_mobile = tables.Column()
+    base_mobile = tables.Column(verbose_name='Base/Mob')
     rssi = tables.Column()
     analysis_state = tables.Column()
     timestamp_local = tables.Column()
-    transmission_count = tables.Column()
+    transmission_count = tables.Column(verbose_name='count')
     mission = tables.Column()
 
     class Meta: 
@@ -58,4 +59,5 @@ class TransmissionsTable(tables.Table):
         # attrs = {'class': 'assettable'} # if you want to assign a class for css
         # # exclude = ('description','photo_1','photo_2','photo_3','photo_4','photo_5','photo_6',
         # #     'file_1','file_2','file_3','file_4','file_5','file_6', 'website') # fields to exclude
-        template_name = 'django_tables2/bootstrap4.html'        
+        template_name = 'django_tables2/bootstrap4.html'
+        attrs = {'class': 'transtable'}       

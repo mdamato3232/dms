@@ -75,6 +75,8 @@ def upload(request):
             newform = form.save(commit=False)
             newform.username = request.user.username # Insert login name
             newform.save() # write record to database
+            # pdb.set_trace()
+            
             # print('Username from newform is = %s' % newform.username)
             # print("the primary key of the last save is %s" % newform.pk)
             # ingest transmission data into database

@@ -103,10 +103,12 @@ img {
   line-height: 10px;
 }
 
-table, th, td{
+/* table, th, td{
   border: 1px solid black;
-  /* border-collapse: collapse; */
-}
+  /* border-collapse: collapse;
+} */
+
+
 
 th{
   background-color: rgb(197, 197, 197);
@@ -139,12 +141,34 @@ tr:nth-child(odd){
   position: absolute;
 }
 
-.fieldWrapper label { 
+
+.transtable td,
+.transtable th {
+  border: 1px solid black;
+  font-size: 12px;
+}
+
+.transtable a {
+  font-size: 12px;
+}
+#dbquery label {
   margin-bottom: 0px;
   width: 200px;
+}
+
+.table-container {
+  padding-left: 5rem;
+}
+
+.proc-table th,
+.proc-table td {
+  border: 1px solid black;
+}
+
+.statsLabel {
+  text-align: center;
 }
 
 .highcharts-credits {
   display: none;
 }
-

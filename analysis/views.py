@@ -117,19 +117,39 @@ def dbquery(request):
           messages.error(request, 'No records match search parameters')
           return HttpResponseRedirect('#')
         print('Number of records returned = %s' % len(queryset_list))
-        # pdb.set_trace()
         # for record in queryset_list:
         #   print('pk = %s' % record.pk)
         #   print('Frequency = %s' % record.profile_frequency)
 
-        table = TransmissionsTable(queryset_list)
+        table = TransmissionsTable(queryset_list) # Instantiate Table
 
-        RequestConfig(request).configure(table)
+        RequestConfig(request).configure(table) # Configure Table
+
+        # Get dataset ready for radio pie chart.
+        radio_dataset = queryset_list \
+          .values('radio_type') \
+          .exclude(radio_type='') \
+          .annotate(total=Count('radio_type')) \
+          .order_by('radio_type')
+        chart = {
+          'chart': {'type': 'pie'},
+          'title': {'text': 'Transmissions by Radio Type'},
+          'series': [{
+            'name': 'Transmissions',
+            'data': list(map(lambda row: {'name': row['radio_type'], \
+              'y': row['total']}, radio_dataset))
+          }]
+        }
+        json_chart = json.dumps(chart)
+        # pdb.set_trace()
+
 
         context = {
-          'table': table
+          'table': table,
+          'json_chart': json_chart,
+          'radio_dataset': radio_dataset
         }
-        return render(request, 'analysis/transmissions.html', context)
+        return render(request, 'analysis/newjsonpiechart.html', context)
     else: 
       messages.error(request, 'Empty Form')
       return HttpResponseRedirect('#')
@@ -171,11 +191,11 @@ def viewmissions(request):
     'table': table
   }
   return render(request, 'analysis/missions.html', context)
-
+  
 def viewtransmissiondata(request, mission_id):
   queryset_list = Transmissions.objects.filter(mission=mission_id)
   table = TransmissionsTable(queryset_list)
-
+  
   RequestConfig(request).configure(table)
 
   context = {
@@ -230,7 +250,7 @@ def radiopie(request, mission_id):
 
 # HighCharts try...
 
-def json_example(request, mission_id):
+def process_query(request, mission_id):
   return render(request, 'analysis/jsonpiechart.html')
 
 def radiopie2(request):
@@ -239,11 +259,6 @@ def radiopie2(request):
     .exclude(radio_type='') \
     .annotate(total=Count('radio_type')) \
     .order_by('radio_type')
-    
-
-  # radios = [d['radio_type'] for d in dataset]
-  # radList = list(Counter(radios).keys())
-  # radQty = list(Counter(radios).values())
 
   chart = {
     'chart': {'type': 'pie'},
