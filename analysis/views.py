@@ -4,11 +4,11 @@ from django_tables2 import RequestConfig
 from .tables import MissionDataTable, TransmissionsTable
 from collections import Counter
 from .forms import QueryForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from analysis.choices import radio_type_choices, encryption_type_choices, privacy_method_choices, base_mobile_choices, rssi_min_choices
-from django.db.models import Max, Min
-import time, pdb
+from django.db.models import Max, Min, Count
+import time, pdb, json
 
 
 def index(request):
@@ -22,7 +22,7 @@ def dbquery(request):
     form = QueryForm(request.POST)
     # check whether it's valid:
     if form.is_valid():
-        # process the data in form.cleaned_data as required
+        # Start building the transmissions query based on the form responses
         queryset_list = Transmissions.objects.order_by('timestamp_gmt')
 
         # Frequency range
@@ -35,7 +35,9 @@ def dbquery(request):
             print('end_freq multiplied = %s' % end_freq)
           else:
             end_freq = start_freq
-          queryset_list = queryset_list.filter(profile_frequency__gte=start_freq).filter(profile_frequency__lte=end_freq)
+          queryset_list = queryset_list \
+            .filter(profile_frequency__gte=start_freq) \
+            .filter(profile_frequency__lte=end_freq)
 
         # Time range
         start_time = form.cleaned_data['start_time']
@@ -43,7 +45,9 @@ def dbquery(request):
           end_time = form.cleaned_data['end_time']
           if not end_time:
             end_time = start_time
-          queryset_list = queryset_list.filter(timestamp_local__gte=start_time).filter(timestamp_local__lte=end_time)
+          queryset_list = queryset_list \
+            .filter(timestamp_local__gte=start_time) \
+            .filter(timestamp_local__lte=end_time)
         
         # Mission number
         mission = form.cleaned_data['mission']
@@ -161,7 +165,7 @@ def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
 
-  RequestConfig(request).configure(tableForm)
+  RequestConfig(request).configure(table)
 
   context = {
     'table': table
@@ -172,7 +176,7 @@ def viewtransmissiondata(request, mission_id):
   queryset_list = Transmissions.objects.filter(mission=mission_id)
   table = TransmissionsTable(queryset_list)
 
-  RequestConfig(missionrequest).configure(table)
+  RequestConfig(request).configure(table)
 
   context = {
     'table': table
@@ -194,7 +198,6 @@ def viewtransmissiondata(request, mission_id):
 #         'charttype': charanalysis/type,
 #         'chartdata': chartdata,
 #     }
-#     #pdb.set_trace()
 #     #return render(request, 'letcap/piechart.html', data)
 #     return render_to_response('letcap/piechart.html', data)
 
@@ -204,7 +207,7 @@ def radiopie(request, mission_id):
     radios = [d['radio_type'] for d in l]
     radList = list(Counter(radios).keys())
     radQty = list(Counter(radios).values())
-
+    # pdb.set_trace()
     extra_serie = {
       "tooltip": {"y_start": "", "y_end": " transmissions"},
       }
@@ -223,6 +226,59 @@ def radiopie(request, mission_id):
     #pdb.set_trace()
     return render_to_response('analysis/piechart.html', data)
 
+    ######################################################################
+
+# HighCharts try...
+
+def json_example(request, mission_id):
+  return render(request, 'analysis/jsonpiechart.html')
+
+def radiopie2(request):
+  dataset = Transmissions.objects.filter(mission=92) \
+    .values('radio_type') \
+    .exclude(radio_type='') \
+    .annotate(total=Count('radio_type')) \
+    .order_by('radio_type')
+    
+
+  # radios = [d['radio_type'] for d in dataset]
+  # radList = list(Counter(radios).keys())
+  # radQty = list(Counter(radios).values())
+
+  chart = {
+    'chart': {'type': 'pie'},
+    'title': {'text': 'Transmissions by Radio Type'},
+    'series': [{
+        'name': 'Transmissions',
+        'data': list(map(lambda row: {'name': row['radio_type'], 'y': row['total']}, dataset))
+    }]
+  }
+  # pdb.set_trace()
+  return JsonResponse(chart)
+
+  # l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
+  # radios = [d['radio_type'] for d in l]
+  # radList = list(Counter(radios).keys())
+  # radQty = list(Counter(radios).values())
+  # # pdb.set_trace()
+  # extra_serie = {
+  #   "tooltip": {"y_start": "", "y_end": " transmissions"},
+  #   }
+
+  # chartdata = {
+  #   'x': radList,
+  #   'y1': radQty,
+  #   'extra1': extra_serie}
+
+  # charttype = "pieChart"
+
+  # data = {
+  #     'charttype': charttype,
+  #     'chartdata': chartdata,
+  # }
+  # #pdb.set_trace()
+  # return render_to_response('analysis/piechart.html', data)
+
   
 
 # queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
@@ -235,4 +291,4 @@ def radiopie(request, mission_id):
   # context = {
   #   'table': table
   # }
-  # return render(request, 'analysis/transmissions.html', context)
+  # return render(request, 'analysis/trfor 
