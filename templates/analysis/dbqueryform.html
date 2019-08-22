@@ -8,7 +8,7 @@
 <section id="dbquery" class="bg-light py-5">
   <div class="container">
     <div class="row">
-      <div class="col-md-10 mx-auto">
+      <div class="col-md-12 mx-auto">
         <!-- Alerts -->
         {% include 'partials/_alerts.html' %}
         <div class="card">
@@ -23,7 +23,7 @@
                 <div class="container">
                   <div class="row">
                     <div class=col-sm>
-                      <div class="fieldWrapper col-4" id="dbWrapper" >
+                      <div class="fieldWrapper col-3" id="dbWrapper" >
                         {{ form.start_freq.errors }}
                         <label for="{{ form.start_freq.id_for_label }}"> Start Freq:</label>
                         {{ form.start_freq }}
@@ -54,7 +54,7 @@
                       </div>
                     </div>
                     <div class=col-sm>
-                      <div class="fieldWrapper col-4">
+                      <div class="fieldWrapper col-3">
                         {{ form.end_freq.errors }}
                         <label for="{{ form.end_freq.id_for_label }}"> End Freq:</label>
                         {{ form.end_freq }}
@@ -64,15 +64,15 @@
                       </div>
                     </div>
                     <div class=col-sm> 
-                        <div class="fieldWrapper col-4">
-                          {{ form.mission.errors }}
-                          <label for="{{ form.mission.id_for_label }}"> Mission#:</label>
-                          {{ form.mission }}
-                          {{ form.rssi_min.errors }}
-                          <label for="{{ form.rssi_min.id_for_label }}"> Minimum RSSI:</label>
-                          {{ form.rssi_min }}
-                        </div>
+                      <div class="fieldWrapper col-3">
+                        {{ form.mission.errors }}
+                        <label for="{{ form.mission.id_for_label }}"> Mission#:</label>
+                        {{ form.mission }}
+                        {{ form.rssi_min.errors }}
+                        <label for="{{ form.rssi_min.id_for_label }}"> Minimum RSSI:</label>
+                        {{ form.rssi_min }}
                       </div>
+                    </div>
                   </div>
                 </div>
               <input type="submit" value="Submit" class="btn btn-secondary btn-block mt-2">

@@ -104,22 +104,16 @@ def dbquery(request):
           print('rssi_min = %s' % rssi_min)
           queryset_list = queryset_list.filter(rssi__gte=rssi_min)
 
-        # maxtime = queryset_list.timestamp_gmt__max
-        # maxtime = queryset_list.aggregate(Max('timestamp_gmt'))
-        # print('max timestamp = %s' % maxtime)
-        # mintime = queryset_list.aggregate(Min('timestamp_gmt'))
-        # print('min timestamp = %s' % mintime)
-        # delta = maxtime - mintime
-        # print('delta time = %s' % delta)
+
 
         # Alerts
         if not queryset_list:
           messages.error(request, 'No records match search parameters')
           return HttpResponseRedirect('#')
-        print('Number of records returned = %s' % len(queryset_list))
-        # for record in queryset_list:
-        #   print('pk = %s' % record.pk)
-        #   print('Frequency = %s' % record.profile_frequency)
+        numRecords = len(queryset_list)
+        print('Number of records returned = %s' % numRecords)
+        messages.success(request, 'Number of records returned = %s' % numRecords)
+
 
         table = TransmissionsTable(queryset_list) # Instantiate Table
 
@@ -131,25 +125,16 @@ def dbquery(request):
           .exclude(radio_type='') \
           .annotate(total=Count('radio_type')) \
           .order_by('radio_type')
-        chart = {
-          'chart': {'type': 'pie'},
-          'title': {'text': 'Transmissions by Radio Type'},
-          'series': [{
-            'name': 'Transmissions',
-            'data': list(map(lambda row: {'name': row['radio_type'], \
+        
+        chart = list(map(lambda row: {'name': row['radio_type'], \
               'y': row['total']}, radio_dataset))
-          }]
-        }
-        json_chart = json.dumps(chart)
         # pdb.set_trace()
-
-
         context = {
           'table': table,
-          'json_chart': json_chart,
-          'radio_dataset': radio_dataset
+          'chart': chart,
+          'numRecords': numRecords
         }
-        return render(request, 'analysis/newjsonpiechart.html', context)
+        return render(request, 'analysis/analysis.html', context)
     else: 
       messages.error(request, 'Empty Form')
       return HttpResponseRedirect('#')

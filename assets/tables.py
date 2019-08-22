@@ -28,3 +28,5 @@ class AssetTable(tables.Table):
         # # exclude = ('description','photo_1','photo_2','photo_3','photo_4','photo_5','photo_6',
         # #     'file_1','file_2','file_3','file_4','file_5','file_6', 'website') # fields to exclude
         template_name = 'django_tables2/bootstrap4.html'
+        # attrs = {'class': 'assetstable'}       
+        
