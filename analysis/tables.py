@@ -14,9 +14,9 @@ class CurrencyColumn(tables.Column):
 
 class MissionDataTable(tables.Table):
     # id = tables.Column()
-    id = tables.LinkColumn('viewtransmissiondata', args=[A('pk')])
-    # description = tables.Column()
-    description = tables.LinkColumn('json_example', args=[A('pk')])
+    id = tables.LinkColumn('deleteMission', args=[A('pk')])
+    description = tables.Column()
+    # description = tables.LinkColumn('json_example', args=[A('pk')])
     username = tables.Column()
     collection_plan = tables.Column()
     cbp_component = tables.Column()

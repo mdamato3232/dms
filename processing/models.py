@@ -79,7 +79,7 @@ class Transmissions(models.Model):
     coder_id = models.CharField(max_length=10,null=True)
     contact_id = models.CharField(max_length=10,null=True)
     emitter_name = models.CharField(max_length=20,null=True)
-    content = models.CharField(max_length=80,null=True)
+    content = models.CharField(max_length=1000,null=True)
     timestamp_gmt = models.DateTimeField(null=True)
     timestamp_local = models.DateTimeField(null=True)
     duration = models.DecimalField(max_digits=6,decimal_places=2,null=True)

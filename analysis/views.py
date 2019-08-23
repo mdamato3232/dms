@@ -14,6 +14,15 @@ import time, pdb, json
 def index(request):
   return render(request, 'analysis/analysis.html')
 
+def deleteMission(request, mission_id):
+
+    # mission = request.GET.get('mission_id')
+    # pdb.set_trace()
+
+    MissionData.objects.filter(pk=mission_id).delete()
+    #<input type="submit" onclick="return confirm('Are you sure?')" />
+    return HttpResponseRedirect('/analysis')
+
 # Database Query
 def dbquery(request):
   # if this is a POST request we need to process the form data

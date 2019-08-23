@@ -114,10 +114,12 @@ def ingest(filename,primarykey):
             with open(transmission,'r') as f:
                 next(f) # read past the line with the column names.
                 rc = None
+
                 try:
                     cur.copy_from(f, 'processing_transmissions', null="", sep=',', columns = (transHeaders))
-                # except:
-                #     print('DataError writing file %s to database' % transmission)
+                except psycopg2.DataError as e:
+                    print('DataError  %s ' % e)
+                    rc = 1 #error code 1 DB error
                 except:
                     print('Unknown error writing file %s to database' % transmission)
                     rc = 1 #error code 1 DB error
@@ -170,7 +172,6 @@ def exportloader(filename, headers, drtHeaders, originalName, primaryKey):
                 newRow.append('')
             for i in fields: # fields is a list of tuples (dest, source)
                 newRow[i[0]] = newLine[i[1]] # copy i[0]-dest, i[1]-source
-                # pdb.set_trace()
             # add the primary key to the last element in the list.
             newRow.append(str(primaryKey))
             #pdb.set_trace()
