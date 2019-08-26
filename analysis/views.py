@@ -123,8 +123,16 @@ def dbquery(request):
         print('Number of records returned = %s' % numRecords)
         messages.success(request, 'Number of records returned = %s' % numRecords)
 
+        # Get the first and last timestamps
+        timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
+        firstTime = timeSet[0]
+        lastTime = timeSet[numRecords-1]
+        print('first = %s' % firstTime['timestamp_gmt'])
+        print('last = %s' % lastTime['timestamp_gmt'])
+        totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
+        print('totalTime = %s' % totalTime)
 
-        table = TransmissionsTable(queryset_list) # Instantiate Table
+        table = TransmissionsTable(queryset_list.order_by('timestamp_gmt')) # Instantiate Table
 
         RequestConfig(request).configure(table) # Configure Table
 
@@ -139,6 +147,7 @@ def dbquery(request):
               'y': row['total']}, radio_dataset))
         # pdb.set_trace()
         context = {
+          'totalTime': totalTime,
           'table': table,
           'chart': chart,
           'numRecords': numRecords
