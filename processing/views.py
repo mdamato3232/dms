@@ -63,8 +63,6 @@ transHeaders = ['profile_id', 'profile_frequency', 'radio_type', 'baud_rate',
                 'audio_file_path', 'transmission_name', 'transmission_comment',
                 'user_defined_text','mission_id']
 
-
-
 def index(request):
   return render(request, 'processing/processing.html')
 
@@ -74,14 +72,9 @@ def upload(request):
         if form.is_valid():
             newform = form.save(commit=False)
             newform.username = request.user.username # Insert login name
-            newform.save() # write record to database
-            # pdb.set_trace()
-            
-            # print('Username from newform is = %s' % newform.username)
-            # print("the primary key of the last save is %s" % newform.pk)
+            newform.save() # write record to database missiondata table
             # ingest transmission data into database
             if newform.tx_fn:
-                #print(settings.MEDIA_ROOT+'/'+str(newform.transmission_export_csv))
                 rc = ingest(settings.MEDIA_ROOT+'/'+str(newform.tx_fn),newform.pk)
                 if rc == None:
                     messages.success(request, 'Mission ' + str(newform.pk) + ' Data Successfully Ingested')
@@ -107,43 +100,44 @@ def ingest(filename,primarykey):
             with open(transmission,'r') as f:
                 next(f) # read past the line with the column names.
                 rc = None
-                cur.copy_expert("COPY processing_transmissions (profile_id, profile_frequency, \
-                    radio_type, baud_rate, \
-                    bandwidth, encryption_type, privacy_method, privacy_id,\
-                    key, key_id, key_confidence, key_set, key_id_set, \
-                    key_confidence_set, base_mobile, link_id,\
-                    analysis_state, first_timestamp_gmt,\
-                    first_timestamp_local, latest_timestamp_gmt,\
-                    latest_timestamp_local, profile_name,\
-                    profile_comment, profile_action, df_flag, priority,\
-                    transmission_count, highlight_color, alert,\
-                    audio_device, collect_limit, audio_limit,\
-                    unplayed_count, user_modified, radio_id_from_rule,\
-                    generate_audio_files, has_audio_flag,audio_file_frequency,\
-                    case_notation, classification, category1, category2,\
-                    category3, category4, category5, category6, category7,\
-                    category8, transmission_id, transmission_frequency,\
-                    time_slot, time_offset, transmission_key,\
-                    transmission_key_id, transmission_key_confidence,\
-                    content_type, radio_id, coder_id, contact_id,\
-                    emitter_name, content, timestamp_gmt, timestamp_local,\
-                    duration, rssi, sensor_ip_address, gps_source,\
-                    sensor_heading_status, sensor_latitude, sensor_longitude,\
-                    sensor_elevation, sensor_speed, sensor_heading,\
-                    sensor_hdop, sensor_satellites, emitter_latitude,\
-                    emitter_longitude, emitter_elevation, emitter_speed,\
-                    emitter_heading, emitter_gps_accuracy, df_orientation,\
-                    df_lob, rcf_state, rcf_path, audio_file_state,\
-                    audio_file_path, transmission_name, transmission_comment,\
-                    user_defined_text,mission_id) FROM STDIN WITH DELIMITER ','  CSV", f)
-                # try:
-                #     cur.copy_from(f, 'processing_transmissions', null="", sep=',', columns = (transHeaders))
-                # except psycopg2.DataError as e:
-                #     print('DataError  %s ' % e)
-                #     rc = 1 #error code 1 DB error
-                # except:
-                #     print('Unknown error writing file %s to database' % transmission)
-                #     rc = 1 #error code 1 DB error
+                # This is really ugly but necessary because cur.copy does not
+                # handle quoted strings properly.
+                try:
+                    cur.copy_expert("COPY processing_transmissions (profile_id, profile_frequency, \
+                        radio_type, baud_rate, \
+                        bandwidth, encryption_type, privacy_method, privacy_id,\
+                        key, key_id, key_confidence, key_set, key_id_set, \
+                        key_confidence_set, base_mobile, link_id,\
+                        analysis_state, first_timestamp_gmt,\
+                        first_timestamp_local, latest_timestamp_gmt,\
+                        latest_timestamp_local, profile_name,\
+                        profile_comment, profile_action, df_flag, priority,\
+                        transmission_count, highlight_color, alert,\
+                        audio_device, collect_limit, audio_limit,\
+                        unplayed_count, user_modified, radio_id_from_rule,\
+                        generate_audio_files, has_audio_flag,audio_file_frequency,\
+                        case_notation, classification, category1, category2,\
+                        category3, category4, category5, category6, category7,\
+                        category8, transmission_id, transmission_frequency,\
+                        time_slot, time_offset, transmission_key,\
+                        transmission_key_id, transmission_key_confidence,\
+                        content_type, radio_id, coder_id, contact_id,\
+                        emitter_name, content, timestamp_gmt, timestamp_local,\
+                        duration, rssi, sensor_ip_address, gps_source,\
+                        sensor_heading_status, sensor_latitude, sensor_longitude,\
+                        sensor_elevation, sensor_speed, sensor_heading,\
+                        sensor_hdop, sensor_satellites, emitter_latitude,\
+                        emitter_longitude, emitter_elevation, emitter_speed,\
+                        emitter_heading, emitter_gps_accuracy, df_orientation,\
+                        df_lob, rcf_state, rcf_path, audio_file_state,\
+                        audio_file_path, transmission_name, transmission_comment,\
+                        user_defined_text,mission_id) FROM STDIN WITH DELIMITER ','  CSV", f)
+                except psycopg2.DataError as e:
+                    print('DataError  %s ' % e)
+                    rc = 1 #error code 1 DB error
+                except:
+                    print('Unknown error writing file %s to database' % transmission)
+                    rc = 1 #error code 1 DB error
             if rc == None:
                 conn.commit()
             f.close()
@@ -181,9 +175,6 @@ def exportloader(inputrdr, headers, drtHeaders, originalName, primaryKey):
         # Now, copy data from source file to destination file row by row.
         rowCount = 0
         for newLine in inputrdr:
-            # if rowCount == 54059:
-            #     pdb.set_trace()
-            # Rebuild the row of data for the new .csv file
             newRow = []
             for i in range(len(headers)-1): # create a blank list -1 for pk.
                 newRow.append('')
@@ -191,10 +182,6 @@ def exportloader(inputrdr, headers, drtHeaders, originalName, primaryKey):
                 newRow[i[0]] = newLine[i[1]] # copy i[0]-dest, i[1]-source
             # add the primary key to the last element in the list.
             newRow.append(str(primaryKey))
-            #pdb.set_trace()
-            # turn newRow list into a string and write to dest .csv file.
-            # if rowCount == 1000:
-            #     pdb.set_trace()
             try:
                 outputwriter.writerow(newRow)
             except TypeError:
