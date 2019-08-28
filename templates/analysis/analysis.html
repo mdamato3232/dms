@@ -27,56 +27,117 @@
 <!-- Alerts -->
 {% include 'partials/_alerts.html' %}
 
-<section id="pie_bar" class="py-4">
+<section id="pie_bar" class="py-0">
 <div class="container">
   <div class="row">
-      <div class="col-md-6">
-        <div id="container"></div>
-        <script src="{% static 'js/highcharts.src.js' %}"></script>
-        <script>
-            Highcharts.chart('container', {
-              chart: {
-                  type: 'pie'
-              },
-              title: {
-                  text: 'Transmissions by Radio Type'
-              },
-              series: [{
-                  name: 'Transmissions',
-                  data: {{ chart|safe }}
-              }]
-            })
-        </script>
-      </div>
+    <div class="col-md-6">
+      <div id="container"></div>
+      <script src="{% static 'js/highcharts.src.js' %}"></script>
+      <script>
+          Highcharts.chart('container', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Transmissions by Radio Type'
+            },
+            series: [{
+                name: 'Transmissions',
+                data: {{ chart|safe }}
+            }]
+          })
+      </script>
+    </div>
       <!-- Fields -->
       <!-- <div class="row mb-5 fields"> -->
-        <div class="col-md-6">
-          <h5 class="statsLabel">Query Result Statistics</h5>
-          <div class="row">
-            <div class=col-sm>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">Records: {{ numRecords }}</li>
-                <li class="list-group-item">Time Span: {{ totalTime }}</li>
-                <!-- <li class="list-group-item text-secondary">
-                  <i class="fas fa-bed"></i> Bedrooms:
-                  <span class="float-right">{{ listing.bedrooms }}</span>
-                </li>
-                <li class="list-group-item text-secondary">
-                  <i class="fas fa-bath"></i> Bathrooms:
-                  <span class="float-right">{{ listing.bathrooms }}</span>
-                </li>
-                <li class="list-group-item text-secondary">
-                  <i class="fas fa-car"></i> Garage:
-                  <span class="float-right">{{ listing.garage }}
-                  </span>
-                </li> -->
-              </ul>
-            </div>
-          </div>
+    <div class="col-md-6">
+      <h5 class="statsLabel">Query Result Statistics</h5>
+      <div class="row">
+        <div class=col-sm>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-primary/">Query Returned: {{ numRecords | intcomma }} Records</li>
+            <li class="list-group-item">Query Time Span: {{ totalTime }}</li>
+            <!-- <li class="list-group-item text-secondary">
+              <i class="fas fa-bed"></i> Bedrooms:
+              <span class="float-right">{{ listing.bedrooms }}</span>
+            </li>
+            <li class="list-group-item text-secondary">
+              <i class="fas fa-bath"></i> Bathrooms:
+              <span class="float-right">{{ listing.bathrooms }}</span>
+            </li>
+            <li class="list-group-item text-secondary">
+              <i class="fas fa-car"></i> Garage:
+              <span class="float-right">{{ listing.garage }}
+              </span>
+            </li> -->
+          </ul>
         </div>
+      </div>
+    </div>
       <!-- </div> -->
   </div>
 </div>
+</section>
+
+<section id="day_bar" class="py-0">
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="container2"></div>
+      <script src="{% static 'js/highcharts.src.js' %}"></script>
+      <script>
+        Highcharts.chart('container2', {
+          chart: {
+              type: 'column'
+          },
+          title: {
+              text: 'Day of Week Transmission Activity'
+          },
+          subtitle: {
+              text: 'Local Times'
+          },
+          xAxis: {
+              categories: [
+                  'Sun',
+                  'Mon',
+                  'Tue',
+                  'Wed',
+                  'Thu',
+                  'Fri',
+                  'Sat'
+              ],
+              crosshair: true
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'Transmission Count'
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.0f} </b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: [{
+              name: 'Count',
+              data: {{ days|safe }}
+          }]
+        });
+      </script>
+    </div>
+  </div>
+</div>
+</section>
 
 <div class="container">
 {% if table %}

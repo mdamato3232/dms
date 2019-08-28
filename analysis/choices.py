@@ -1,13 +1,15 @@
 radio_type_choices=[
   ('','---'),
-  ('P25Phase1','P25Phase1'),
   ('Clear','Clear'),
   ('Dmr','Dmr'),
   ('FixedInversion','FixedInversion'),
   ('LTR','LTR'),
+  ('Midian','Midian'),
   ('Mpt1327','Mpt1327'),
   ('Nxdn','Nxdn'),
+  ('P25Phase1','P25Phase1'),
   ('Pager','Pager'),
+  ('SmartNet','SmartNet'),
   ('UnknownRadio','UnknownRadio'),
 ]
 

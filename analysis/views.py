@@ -123,8 +123,20 @@ def dbquery(request):
         print('Number of records returned = %s' % numRecords)
         messages.success(request, 'Number of records returned = %s' % numRecords)
 
+        # Get day of the week info...
+       
+        days=[]
+        for day in range(1,8):
+          daycount = queryset_list.filter(timestamp_local__week_day=day).count()
+          days.append(daycount)
+        print('days = %s' % days)
+
+          
         # Get the first and last timestamps
         timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
+        timeSetnv = queryset_list.order_by('timestamp_gmt')
+        
+
         firstTime = timeSet[0]
         lastTime = timeSet[numRecords-1]
         print('first = %s' % firstTime['timestamp_gmt'])
@@ -150,7 +162,8 @@ def dbquery(request):
           'totalTime': totalTime,
           'table': table,
           'chart': chart,
-          'numRecords': numRecords
+          'numRecords': numRecords,
+          'days': days
         }
         return render(request, 'analysis/analysis.html', context)
     else: 
