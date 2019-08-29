@@ -177,7 +177,7 @@ def dbquery(request):
   else:
       form = QueryForm()
       context = {
-        'form': form,
+        'form': form
       }
   return render(request, 'analysis/dbqueryform.html', context)
 
@@ -200,7 +200,7 @@ def dbquery(request):
 def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
-
+  print('In Viewmissions...')
   RequestConfig(request).configure(table)
 
   context = {

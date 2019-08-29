@@ -1,7 +1,9 @@
 from django.db import models
 from assets.models import Component, Sector
 
-
+# Table holds user specific data displayed on the dashboard
+# class UserData(models.model):
+    
 
 
 # Table holds description of the mission

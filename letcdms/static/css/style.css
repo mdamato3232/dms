@@ -103,6 +103,10 @@ img {
   line-height: 10px;
 }
 
+#msnctr .table-container{
+  line-height: 14px;
+}
+
 /* table, th, td{
   border: 1px solid black;
   /* border-collapse: collapse;
@@ -148,16 +152,32 @@ tr:nth-child(odd){
   font-size: 12px;
 }
 
+.missiontable td,
+.missiontable th {
+  border: 1px solid black;
+  font-size: 14px;
+}
+
 .transtable a {
   font-size: 12px;
 }
+
+.missiontable {
+  margin-bottom: 1rem;
+}
+
 #dbquery label {
   margin-bottom: 0px;
   width: 200px;
 }
 
+#transctr {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
 .table-container {
-  padding-left: 5rem;
+  padding-left: 0rem;
 }
 
 .proc-table th,

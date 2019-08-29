@@ -55,8 +55,8 @@
       <div class="row">
         <div class=col-sm>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item text-primary/">Query Returned: {{ numRecords | intcomma }} Records</li>
-            <li class="list-group-item">Query Time Span: {{ totalTime }}</li>
+            <li class="list-group-item text-primary/">Returned: {{ numRecords | intcomma }} Records</li>
+            <li class="list-group-item">Time Span: {{ totalTime }}</li>
             <!-- <li class="list-group-item text-secondary">
               <i class="fas fa-bed"></i> Bedrooms:
               <span class="float-right">{{ listing.bedrooms }}</span>
@@ -123,10 +123,10 @@
               useHTML: true
           },
           plotOptions: {
-              column: {
-                  pointPadding: 0.2,
-                  borderWidth: 0
-              }
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
           },
           series: [{
               name: 'Count',
@@ -139,10 +139,10 @@
 </div>
 </section>
 
-<div class="container">
-{% if table %}
-  {% render_table table %}
-{% endif %}
+<div id="transctr" class="container">
+  {% if table %}
+    {% render_table table %}
+  {% endif %}
 </div>
 
 
