@@ -172,6 +172,8 @@ tr:nth-child(odd){
 }
 
 #transctr {
+  margin-top: 1rem;
+  margin-bottom: 1em;
   padding-right: 0px;
   padding-left: 0px;
 }
@@ -191,4 +193,17 @@ tr:nth-child(odd){
 
 .highcharts-credits {
   display: none;
+}
+
+#qinfo {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+#qinfo1 {
+  margin: 0px;
+}
+
+#qinfodiv {
+  margin-bottom: 1em;
 }

@@ -238,12 +238,10 @@ def viewtransmissiondata(request, mission_id):
 #     return render_to_response('letcap/piechart.html', data)
 
 def radiopie(request, mission_id):
-    # mission = request.GET.get('miss_id')
     l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
     radios = [d['radio_type'] for d in l]
     radList = list(Counter(radios).keys())
     radQty = list(Counter(radios).values())
-    # pdb.set_trace()
     extra_serie = {
       "tooltip": {"y_start": "", "y_end": " transmissions"},
       }
