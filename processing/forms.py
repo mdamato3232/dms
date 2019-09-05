@@ -6,3 +6,6 @@ class UploadFileForm(forms.ModelForm):
         model = MissionData
         fields = ('description', 'collection_plan',
             'cbp_component', 'cbp_sector', 'sensor', 'tx_fn')
+        labels = {
+            "cbp_sector": "LETC Unit"
+        }
