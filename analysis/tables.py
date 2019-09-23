@@ -1,5 +1,6 @@
 # tutorial/tables.py
 import django_tables2 as tables
+# from django_tables2 import tables, TemplateColumn
 from processing.models import MissionData, Transmissions
 from django_tables2.utils import A
 from django.contrib.humanize.templatetags.humanize import intcomma
@@ -24,6 +25,7 @@ class MissionDataTable(tables.Table):
     sensor = tables.Column()
     tx_fn = tables.Column()
     uploaded_at = tables.Column()
+    # view = TemplateColumn(template_name='analysis/transmissions_view_col.html')
 
     class Meta: 
         # model = Asset # if you want to display every column (exclude below)

@@ -1,7 +1,6 @@
 astroid==2.1.0
 autopep8==1.4.3
 Django==2.1.7
-django-nvd3==0.9.7
 django-tables2==2.0.5
 isort==4.3.4
 Jinja2==2.10.1
@@ -15,7 +14,6 @@ pycodestyle==2.5.0
 pylint==2.2.2
 pylint-django==2.0.6
 pylint-plugin-utils==0.5
-python-nvd3==0.14.2
 python-slugify==1.1.4
 pytz==2018.9
 six==1.12.0
