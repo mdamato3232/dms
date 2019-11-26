@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from analysis.choices import radio_type_choices, encryption_type_choices, privacy_method_choices, base_mobile_choices, rssi_min_choices
 from django.db.models import Max, Min, Count
-import time, pdb, json
+import time, pdb, json, pickle
 
 
 def index(request):
@@ -119,52 +119,60 @@ def dbquery(request):
         if not queryset_list:
           messages.error(request, 'No records match search parameters')
           return HttpResponseRedirect('#')
-        numRecords = len(queryset_list)
-        print('Number of records returned = %s' % numRecords)
-        messages.success(request, 'Number of records returned = %s' % numRecords)
 
-        # Get day of the week info...
+        # pickle the queryset_list 
+        # fw = open('/tmp/pickle.dat', 'wb')
+        # pickle.dump(queryset_list, fw)
+        # fw.close
+
+        context = setContext(request, queryset_list)
+
+        # numRecords = len(queryset_list)
+        # print('Number of records returned = %s' % numRecords)
+        # messages.success(request, 'Number of records returned = %s' % numRecords)
+
+        # # Get day of the week info...
        
-        days=[]
-        for day in range(1,8):
-          daycount = queryset_list.filter(timestamp_local__week_day=day).count()
-          days.append(daycount)
-        print('days = %s' % days)
+        # days=[]
+        # for day in range(1,8):
+        #   daycount = queryset_list.filter(timestamp_local__week_day=day).count()
+        #   days.append(daycount)
+        # print('days = %s' % days)
 
           
-        # Get the first and last timestamps
-        timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
-        timeSetnv = queryset_list.order_by('timestamp_gmt')
+        # # Get the first and last timestamps
+        # timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
+        # timeSetnv = queryset_list.order_by('timestamp_gmt')
         
 
-        firstTime = timeSet[0]
-        lastTime = timeSet[numRecords-1]
-        print('first = %s' % firstTime['timestamp_gmt'])
-        print('last = %s' % lastTime['timestamp_gmt'])
-        totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
-        print('totalTime = %s' % totalTime)
+        # firstTime = timeSet[0]
+        # lastTime = timeSet[numRecords-1]
+        # print('first = %s' % firstTime['timestamp_gmt'])
+        # print('last = %s' % lastTime['timestamp_gmt'])
+        # totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
+        # print('totalTime = %s' % totalTime)
 
-        table = TransmissionsTable(queryset_list.order_by('timestamp_gmt')) # Instantiate Table
+        # table = TransmissionsTable(queryset_list.order_by('timestamp_gmt')) # Instantiate Table
 
-        RequestConfig(request).configure(table) # Configure Table
+        # RequestConfig(request).configure(table) # Configure Table
 
-        # Get dataset ready for radio pie chart.
-        radio_dataset = queryset_list \
-          .values('radio_type') \
-          .exclude(radio_type='') \
-          .annotate(total=Count('radio_type')) \
-          .order_by('radio_type')
+        # # Get dataset ready for radio pie chart.
+        # radio_dataset = queryset_list \
+        #   .values('radio_type') \
+        #   .exclude(radio_type='') \
+        #   .annotate(total=Count('radio_type')) \
+        #   .order_by('radio_type')
         
-        chart = list(map(lambda row: {'name': row['radio_type'], \
-              'y': row['total']}, radio_dataset))
-        # pdb.set_trace()
-        context = {
-          'totalTime': totalTime,
-          'table': table,
-          'chart': chart,
-          'numRecords': numRecords,
-          'days': days
-        }
+        # chart = list(map(lambda row: {'name': row['radio_type'], \
+        #       'y': row['total']}, radio_dataset))
+        # # pdb.set_trace()
+        # context = {
+        #   'totalTime': totalTime,
+        #   'table': table,
+        #   'chart': chart,
+        #   'numRecords': numRecords,
+        #   'days': days
+        # }
         return render(request, 'analysis/analysis.html', context)
     else: 
       messages.error(request, 'Empty Form')
@@ -175,28 +183,82 @@ def dbquery(request):
 
   # if a GET (or any other method) we'll create a blank form
   else:
+
+    if request.GET:
+      print('about to open pickle file')
+      fd = open('/tmp/pickle.dat', 'rb')
+      print('about to unpickle')
+      qs = pickle.load(fd)
+      print('about to call setContext')
+      context = setContext(request, qs)
+      print('about to render')
+      return render(request, 'analysis/analysis.html', context)
+    else:
       form = QueryForm()
       context = {
         'form': form
       }
-  return render(request, 'analysis/dbqueryform.html', context)
+      return render(request, 'analysis/dbqueryform.html', context)
+
+###################################################################################
+def setContext(request, qs_list):
+  # numRecords = len(qs_list)
+  # print('Number of records returned = %s' % numRecords)
+  # messages.success(request, 'Number of records returned = %s' % numRecords)
+
+  # Get day of the week info...
+  
+  # days=[]
+  # for day in range(1,8):
+  #   daycount = qs_list.filter(timestamp_local__week_day=day).count()
+  #   days.append(daycount)
+  # print('days = %s' % days)
+
+    
+  # # Get the first and last timestamps
+  # timeSet = qs_list.values('timestamp_gmt').order_by('timestamp_gmt')
+  # timeSetnv = qs_list.order_by('timestamp_gmt')
+  
+
+  # firstTime = timeSet[0]
+  # lastTime = timeSet[numRecords-1]
+  # print('first = %s' % firstTime['timestamp_gmt'])
+  # print('last = %s' % lastTime['timestamp_gmt'])
+  # totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
+  # print('totalTime = %s' % totalTime)
+
+  # table = TransmissionsTable(qs_list.order_by('timestamp_gmt')) # Instantiate Table
+  print('About to instantiate table')
+  table = TransmissionsTable(qs_list) # Instantiate Table
+  print('about to configure table')
+  RequestConfig(request).configure(table) # Configure Table
+  print('about to set context')
+
+  # Get dataset ready for radio pie chart.
+  # radio_dataset = qs_list \
+  #   .values('radio_type') \
+  #   .exclude(radio_type='') \
+  #   .annotate(total=Count('radio_type')) \
+  #   .order_by('radio_type')
+  
+  # chart = list(map(lambda row: {'name': row['radio_type'], \
+  #       'y': row['total']}, radio_dataset))
+  # pdb.set_trace()
+  context = {
+    # 'totalTime': totalTime,
+    'table': table,
+    # 'chart': chart,
+    # 'numRecords': numRecords,
+    # 'days': days
+  }
+  time.sleep(5)
+
+  print('about to return from setContext')
+  return context
+###################################################################################
 
 
-
-
-
-  # # queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
-  # queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
-  # print('Number of records returned = %s' % len(queryset_list))
-  # table = TransmissionsTable(queryset_list)
-
-  # RequestConfig(request).configure(table)
-
-  # context = {
-  #   'table': table
-  # }
-  # return render(request, 'analysis/transmissions.html', context)
-
+ 
 def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
@@ -210,7 +272,31 @@ def viewmissions(request):
   
 def viewtransmissiondata(request, mission_id):
   queryset_list = Transmissions.objects.filter(mission=mission_id)
+  print('queryset_list is of type: -> ', type(queryset_list))
+  print('queryset_list is of length: -> ', len(queryset_list))
   table = TransmissionsTable(queryset_list)
+  print(table)
+  print('table is of type: -> ', type(table))
+
+  # put some debug print statements to figure out sorting...
+  print('request.scheme = %s' % request.scheme)
+  print('request.path = %s' % request.path)
+  print('request.path_info = %s' % request.path_info)
+  print('request.method = %s' % request.method)
+  print('request.body = %s' % request.body)
+  print('request.GET = %s' % request.GET)
+  d = request.GET
+  print('length of request.GET dict = %s' % len(request.GET))
+  print(d.keys())
+  for k in sorted(d.keys()):
+    print('Key:', k, '->', d[k])
+  mm = request.META
+  print('META dict is of length: -> ', len(mm))
+  print('META is of type: -> ', type(mm))
+
+  for k in sorted(mm.keys()):
+    print('Meta Key:', k, '->', mm[k])
+
   
   RequestConfig(request).configure(table)
 
@@ -218,24 +304,6 @@ def viewtransmissiondata(request, mission_id):
     'table': table
   }
   return render(request, 'analysis/transmissions.html', context)
-
-# def radiopie(request, mission_id):
-#     # mission = request.GET.get('miss_id')
-#     l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
-#     radios = [d['radio_ty/e'] for d in l]
-#     radList = list(Counteanalysis/(radios).keys())
-#     radQty = list(Counteranalysis/(radios).values())
-#     #extra_serie = {"toolanalysis/ip": {"y_start": "", "y_end": " cal"}}
-#     extra_serie = {"tooltanalysis/p": {"y_start": "", "y_end": " cal"}}
-#     chartdata = {'x': radanalysis/ist, 'y1': radQty, 'extra1': extra_serie}
-#     charttype = "pieChartanalysis/
-
-#     data = {
-#         'charttype': charanalysis/type,
-#         'chartdata': chartdata,
-#     }
-#     #return render(request, 'letcap/piechart.html', data)
-#     return render_to_response('letcap/piechart.html', data)
 
 def radiopie(request, mission_id):
     l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
@@ -285,39 +353,4 @@ def radiopie2(request):
   # pdb.set_trace()
   return JsonResponse(chart)
 
-  # l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
-  # radios = [d['radio_type'] for d in l]
-  # radList = list(Counter(radios).keys())
-  # radQty = list(Counter(radios).values())
-  # # pdb.set_trace()
-  # extra_serie = {
-  #   "tooltip": {"y_start": "", "y_end": " transmissions"},
-  #   }
-
-  # chartdata = {
-  #   'x': radList,
-  #   'y1': radQty,
-  #   'extra1': extra_serie}
-
-  # charttype = "pieChart"
-
-  # data = {
-  #     'charttype': charttype,
-  #     'chartdata': chartdata,
-  # }
-  # #pdb.set_trace()
-  # return render_to_response('analysis/piechart.html', data)
-
   
-
-# queryset_list = Transmissions.objects.filter(profile_frequency__gte = 451850000).filter(profile_frequency__lte = 461000000).filter(timestamp_local__gte='2019-07-16 23:51:47+00')
-  # queryset_list = Transmissions.objects.filter(profile_frequency = StartFreq)
-  # print('Number of records returned = %s' % len(queryset_list))
-  # table = TransmissionsTable(queryset_list)
-
-  # RequestConfig(request).configure(table)
-
-  # context = {
-  #   'table': table
-  # }
-  # return render(request, 'analysis/trfor 

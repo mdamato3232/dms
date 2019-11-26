@@ -1,0 +1,11 @@
+10/11/2019 - Upgraded Django from 2.1.7 to 2.2.6 using "pip install --upgrade Django"
+10/11/2019 - Upgraded pip from 19.2.1 to 19.2.3 using "pip install --upgrade pip"
+10/11/2019 - After upgrading Django to 2.2.6 and running development server, I get
+    an message about 2 unapplied migrations requireing a "python manage.py migrate"
+    (venv) $ python manage.py migrate
+    Operations to perform:
+     Apply all migrations: admin, assets, auth, contenttypes, processing, sessions
+    Running migrations:
+     Applying auth.0010_alter_group_name_max_length... OK
+     Applying auth.0011_update_proxy_permissions... OK
+

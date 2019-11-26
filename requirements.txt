@@ -1,6 +1,6 @@
 astroid==2.1.0
 autopep8==1.4.3
-Django==2.1.7
+Django==2.2.6
 django-tables2==2.0.5
 isort==4.3.4
 Jinja2==2.10.1
@@ -17,5 +17,6 @@ pylint-plugin-utils==0.5
 python-slugify==1.1.4
 pytz==2018.9
 six==1.12.0
+sqlparse==0.3.0
 Unidecode==1.0.23
 wrapt==1.11.1
