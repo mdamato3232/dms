@@ -125,54 +125,54 @@ def dbquery(request):
         # pickle.dump(queryset_list, fw)
         # fw.close
 
-        context = setContext(request, queryset_list)
+        #  save this for later...context = setContext(request, queryset_list)
 
-        # numRecords = len(queryset_list)
-        # print('Number of records returned = %s' % numRecords)
-        # messages.success(request, 'Number of records returned = %s' % numRecords)
+        numRecords = len(queryset_list)
+        print('Number of records returned = %s' % numRecords)
+        messages.success(request, 'Number of records returned = %s' % numRecords)
 
-        # # Get day of the week info...
+        # Get day of the week info...
        
-        # days=[]
-        # for day in range(1,8):
-        #   daycount = queryset_list.filter(timestamp_local__week_day=day).count()
-        #   days.append(daycount)
-        # print('days = %s' % days)
+        days=[]
+        for day in range(1,8):
+          daycount = queryset_list.filter(timestamp_local__week_day=day).count()
+          days.append(daycount)
+        print('days = %s' % days)
 
           
-        # # Get the first and last timestamps
-        # timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
-        # timeSetnv = queryset_list.order_by('timestamp_gmt')
+        # Get the first and last timestamps
+        timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
+        timeSetnv = queryset_list.order_by('timestamp_gmt')
         
 
-        # firstTime = timeSet[0]
-        # lastTime = timeSet[numRecords-1]
-        # print('first = %s' % firstTime['timestamp_gmt'])
-        # print('last = %s' % lastTime['timestamp_gmt'])
-        # totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
-        # print('totalTime = %s' % totalTime)
+        firstTime = timeSet[0]
+        lastTime = timeSet[numRecords-1]
+        print('first = %s' % firstTime['timestamp_gmt'])
+        print('last = %s' % lastTime['timestamp_gmt'])
+        totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
+        print('totalTime = %s' % totalTime)
 
-        # table = TransmissionsTable(queryset_list.order_by('timestamp_gmt')) # Instantiate Table
+        table = TransmissionsTable(queryset_list.order_by('timestamp_gmt')) # Instantiate Table
 
-        # RequestConfig(request).configure(table) # Configure Table
+        RequestConfig(request).configure(table) # Configure Table
 
-        # # Get dataset ready for radio pie chart.
-        # radio_dataset = queryset_list \
-        #   .values('radio_type') \
-        #   .exclude(radio_type='') \
-        #   .annotate(total=Count('radio_type')) \
-        #   .order_by('radio_type')
+        # Get dataset ready for radio pie chart.
+        radio_dataset = queryset_list \
+          .values('radio_type') \
+          .exclude(radio_type='') \
+          .annotate(total=Count('radio_type')) \
+          .order_by('radio_type')
         
-        # chart = list(map(lambda row: {'name': row['radio_type'], \
-        #       'y': row['total']}, radio_dataset))
-        # # pdb.set_trace()
-        # context = {
-        #   'totalTime': totalTime,
-        #   'table': table,
-        #   'chart': chart,
-        #   'numRecords': numRecords,
-        #   'days': days
-        # }
+        chart = list(map(lambda row: {'name': row['radio_type'], \
+              'y': row['total']}, radio_dataset))
+        # pdb.set_trace()
+        context = {
+          'totalTime': totalTime,
+          'table': table,
+          'chart': chart,
+          'numRecords': numRecords,
+          'days': days
+        }
         return render(request, 'analysis/analysis.html', context)
     else: 
       messages.error(request, 'Empty Form')
@@ -184,21 +184,21 @@ def dbquery(request):
   # if a GET (or any other method) we'll create a blank form
   else:
 
-    if request.GET:
-      print('about to open pickle file')
-      fd = open('/tmp/pickle.dat', 'rb')
-      print('about to unpickle')
-      qs = pickle.load(fd)
-      print('about to call setContext')
-      context = setContext(request, qs)
-      print('about to render')
-      return render(request, 'analysis/analysis.html', context)
-    else:
-      form = QueryForm()
-      context = {
-        'form': form
-      }
-      return render(request, 'analysis/dbqueryform.html', context)
+    # if request.GET:
+    #   print('about to open pickle file')
+    #   fd = open('/tmp/pickle.dat', 'rb')
+    #   print('about to unpickle')
+    #   qs = pickle.load(fd)
+    #   print('about to call setContext')
+    #   context = setContext(request, qs)
+    #   print('about to render')
+    #   return render(request, 'analysis/analysis.html', context)
+    # else:
+    form = QueryForm()
+    context = {
+      'form': form
+    }
+    return render(request, 'analysis/dbqueryform.html', context)
 
 ###################################################################################
 def setContext(request, qs_list):
