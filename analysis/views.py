@@ -10,15 +10,12 @@ from analysis.choices import radio_type_choices, encryption_type_choices, privac
 from django.db.models import Max, Min, Count
 import time, pdb, json, pickle
 
-
 def index(request):
   return render(request, 'analysis/analysis.html')
 
 def deleteMission(request, mission_id):
-
     # mission = request.GET.get('mission_id')
     # pdb.set_trace()
-
     MissionData.objects.filter(pk=mission_id).delete()
     #<input type="submit" onclick="return confirm('Are you sure?')" />
     return HttpResponseRedirect('/analysis')
@@ -41,7 +38,6 @@ def dbquery(request):
           end_freq = form.cleaned_data['end_freq']
           if end_freq:
             end_freq = int(end_freq * 1000000)
-            print('end_freq multiplied = %s' % end_freq)
           else:
             end_freq = start_freq
           queryset_list = queryset_list \
@@ -60,25 +56,21 @@ def dbquery(request):
         
         # Mission number
         mission = form.cleaned_data['mission']
-        print('Mission Number = %s' % mission)
         if mission:
           queryset_list = queryset_list.filter(mission_id=mission)
 
         # Privacy ID
         privacy_id = form.cleaned_data['privacy_id']
-        print('privacy_id Number = %s' % privacy_id)
         if privacy_id:
           queryset_list = queryset_list.filter(privacy_id=privacy_id)
 
         # Key
         key = form.cleaned_data['key']
-        print('key Number = %s' % key)
         if key:
           queryset_list = queryset_list.filter(key=key)
 
         # Contact ID
         contact_id = form.cleaned_data['contact_id']
-        print('contact_id Number = %s' % contact_id)
         if contact_id:
           queryset_list = queryset_list.filter(contact_id=contact_id)
 
@@ -86,34 +78,27 @@ def dbquery(request):
         # Radio Type
         radio_type = form.cleaned_data['radio_type']
         if radio_type != '':
-          print('radio_type = %s' % radio_type)
           queryset_list = queryset_list.filter(radio_type=radio_type)
 
         # Encryption Type
         encryption_type = form.cleaned_data['encryption_type']
         if encryption_type != '':
-          print('encryption_type = %s' % encryption_type)
           queryset_list = queryset_list.filter(encryption_type=encryption_type)
 
         # Privacy Method
         privacy_method = form.cleaned_data['privacy_method']
         if privacy_method != '':
-          print('privacy_method = %s' % privacy_method)
           queryset_list = queryset_list.filter(privacy_method=privacy_method)
 
         # Base/Mobile
         base_mobile = form.cleaned_data['base_mobile']
         if base_mobile != '':
-          print('base_mobile = %s' % base_mobile)
           queryset_list = queryset_list.filter(base_mobile=base_mobile)
 
         # Minimum RSSI filter
         rssi_min = form.cleaned_data['rssi_min']
         if rssi_min != ('' or None):
-          print('rssi_min = %s' % rssi_min)
           queryset_list = queryset_list.filter(rssi__gte=rssi_min)
-
-
 
         # Alerts
         if not queryset_list:
@@ -124,11 +109,9 @@ def dbquery(request):
         # fw = open('/tmp/pickle.dat', 'wb')
         # pickle.dump(queryset_list, fw)
         # fw.close
-
         #  save this for later...context = setContext(request, queryset_list)
 
         numRecords = len(queryset_list)
-        print('Number of records returned = %s' % numRecords)
         messages.success(request, 'Number of records returned = %s' % numRecords)
 
         # Get day of the week info...
@@ -138,12 +121,10 @@ def dbquery(request):
           daycount = queryset_list.filter(timestamp_local__week_day=day).count()
           days.append(daycount)
         print('days = %s' % days)
-
           
         # Get the first and last timestamps
         timeSet = queryset_list.values('timestamp_gmt').order_by('timestamp_gmt')
         timeSetnv = queryset_list.order_by('timestamp_gmt')
-        
 
         firstTime = timeSet[0]
         lastTime = timeSet[numRecords-1]
@@ -201,46 +182,37 @@ def dbquery(request):
     return render(request, 'analysis/dbqueryform.html', context)
 
 ###################################################################################
-def setContext(request, qs_list):
+# def setContext(request, qs_list):
   # numRecords = len(qs_list)
   # print('Number of records returned = %s' % numRecords)
   # messages.success(request, 'Number of records returned = %s' % numRecords)
-
   # Get day of the week info...
-  
   # days=[]
   # for day in range(1,8):
   #   daycount = qs_list.filter(timestamp_local__week_day=day).count()
   #   days.append(daycount)
   # print('days = %s' % days)
-
-    
   # # Get the first and last timestamps
   # timeSet = qs_list.values('timestamp_gmt').order_by('timestamp_gmt')
   # timeSetnv = qs_list.order_by('timestamp_gmt')
-  
-
   # firstTime = timeSet[0]
   # lastTime = timeSet[numRecords-1]
   # print('first = %s' % firstTime['timestamp_gmt'])
   # print('last = %s' % lastTime['timestamp_gmt'])
   # totalTime = lastTime['timestamp_gmt'] - firstTime['timestamp_gmt']
   # print('totalTime = %s' % totalTime)
-
   # table = TransmissionsTable(qs_list.order_by('timestamp_gmt')) # Instantiate Table
-  print('About to instantiate table')
-  table = TransmissionsTable(qs_list) # Instantiate Table
-  print('about to configure table')
-  RequestConfig(request).configure(table) # Configure Table
-  print('about to set context')
-
+  # print('About to instantiate table')
+  # table = TransmissionsTable(qs_list) # Instantiate Table
+  # print('about to configure table')
+  # RequestConfig(request).configure(table) # Configure Table
+  # print('about to set context')
   # Get dataset ready for radio pie chart.
   # radio_dataset = qs_list \
   #   .values('radio_type') \
   #   .exclude(radio_type='') \
   #   .annotate(total=Count('radio_type')) \
   #   .order_by('radio_type')
-  
   # chart = list(map(lambda row: {'name': row['radio_type'], \
   #       'y': row['total']}, radio_dataset))
   # pdb.set_trace()
@@ -251,8 +223,7 @@ def setContext(request, qs_list):
     # 'numRecords': numRecords,
     # 'days': days
   }
-  time.sleep(5)
-
+  # time.sleep(5)
   print('about to return from setContext')
   return context
 ###################################################################################
@@ -262,9 +233,7 @@ def setContext(request, qs_list):
 def viewmissions(request):
   queryset_list = MissionData.objects.order_by('-uploaded_at')
   table = MissionDataTable(queryset_list)
-  print('In Viewmissions...')
   RequestConfig(request).configure(table)
-
   context = {
     'table': table
   }

@@ -112,3 +112,8 @@ class Transmissions(models.Model):
     transmission_comment = models.CharField(max_length=500,null=True)
     user_defined_text = models.CharField(max_length=500,null=True)
     mission = models.ForeignKey('MissionData',on_delete=models.CASCADE)
+
+    # class Meta:
+    #     indexes = [
+    #         models.Index(fields=['mission'], name='mission_idx'),
+    #     ]
