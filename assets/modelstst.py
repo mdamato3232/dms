@@ -1,8 +1,11 @@
+import os
+
 from django.db import models
-from django.dispatch import receiver
 from django.db.models.signals import post_save
-import os, pdb
-from assets.signals import rotate_image
+from django.dispatch import receiver
+
+from .views import rotate_image
+
 
 
 
@@ -44,39 +47,12 @@ class Asset(models.Model):
   def __str__(self):
     return self.partnumber
 
-# method for updating 
 @receiver(post_save, sender=Asset, dispatch_uid="update_image_asset")
 def update_image(sender, instance, **kwargs):
-  # pdb.set_trace()
-  if instance.photo_main:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_main.url
-    rotate_image(fullpath)
-  if instance.photo_1:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_1.url
-    rotate_image(fullpath)
-  if instance.photo_2:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_2.url
-    rotate_image(fullpath)
-  if instance.photo_3:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_3.url
-    rotate_image(fullpath)
-  if instance.photo_4:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_4.url
-    rotate_image(fullpath)
-  if instance.photo_5:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_5.url
-    rotate_image(fullpath)
-  if instance.photo_6:
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fullpath = BASE_DIR + instance.photo_6.url
-    rotate_image(fullpath)
-    
+    if instance.image:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        fullpath = BASE_DIR + instance.image.url
+        rotate_image(fullpath)
 
   
 
