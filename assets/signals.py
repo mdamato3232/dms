@@ -1,3 +1,7 @@
+# This code is required to ensure imported photos are stored in the proper
+# rotation.  A receiver decorator has been placed in assets/models.py to
+# receive a signal and execute this code whenever the a photo is saved 
+# within the database.
 
 from PIL import Image, ExifTags
 def rotate_image(filepath):

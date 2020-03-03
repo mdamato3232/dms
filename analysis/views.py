@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from processing.models import MissionData, Transmissions
 from django_tables2 import RequestConfig
 from .tables import MissionDataTable, TransmissionsTable
@@ -273,31 +273,6 @@ def viewtransmissiondata(request, mission_id):
     'table': table
   }
   return render(request, 'analysis/transmissions.html', context)
-
-def radiopie(request, mission_id):
-    l = Transmissions.objects.filter(mission=mission_id).values('radio_type')
-    radios = [d['radio_type'] for d in l]
-    radList = list(Counter(radios).keys())
-    radQty = list(Counter(radios).values())
-    extra_serie = {
-      "tooltip": {"y_start": "", "y_end": " transmissions"},
-      }
-
-    chartdata = {
-      'x': radList,
-      'y1': radQty,
-      'extra1': extra_serie}
-
-    charttype = "pieChart"
-
-    data = {
-        'charttype': charttype,
-        'chartdata': chartdata,
-    }
-    #pdb.set_trace()
-    return render_to_response('analysis/piechart.html', data)
-
-    ######################################################################
 
 # HighCharts try...
 

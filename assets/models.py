@@ -44,7 +44,7 @@ class Asset(models.Model):
   def __str__(self):
     return self.partnumber
 
-# method for updating 
+# method for updating photo rotation.  See signals.py for rotation code.
 @receiver(post_save, sender=Asset, dispatch_uid="update_image_asset")
 def update_image(sender, instance, **kwargs):
   # pdb.set_trace()

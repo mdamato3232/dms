@@ -8,4 +8,14 @@
     Running migrations:
      Applying auth.0010_alter_group_name_max_length... OK
      Applying auth.0011_update_proxy_permissions... OK
+03/02/2020 - Upgraded Django from 2.2.6 to 3.0.3 using "pip install --upgrade Django"
+    Upgrading through this many releases didn't work.  Went back to 2.2.6 and will
+    do incremental upgrades to get to 3.0.3
+    2.2.7 - OK
+    2.2.8 - OK
+    2.2.9 - OK
+    2.2.10 - OK - Going to hang here until research into changes of 3.0
+03/02/2020 - Upgraded pip from 19.2.3 to 20.0.2 using "pip install --upgrade pip"
+03/03/2020 - pip install --upgrade django-tables2 -> from 2.0.5 to 2.2.1
+03/03/2020 - pip install --upgrade Django=3.0.3
 
