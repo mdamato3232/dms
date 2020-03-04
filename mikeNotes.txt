@@ -19,4 +19,5 @@
 03/03/2020 - pip install --upgrade django-tables2 -> from 2.0.5 to 2.2.1
 03/03/2020 - pip install --upgrade Django=3.0.3
 03/03/2020 - pip install --upgrade Pillow -> from 5.4.1 to 7.0.0
+03/04/2020 - pip install --upgrade Django=3.0.3
 
